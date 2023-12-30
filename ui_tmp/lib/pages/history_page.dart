@@ -17,6 +17,7 @@ class HistoryPage extends StatelessWidget {
         ),
       ),
       body: Center(
+        //到時候會改成ListView.builder()
         child: ListView(
           padding: const EdgeInsets.only(top: 40.0),
           children: const [
