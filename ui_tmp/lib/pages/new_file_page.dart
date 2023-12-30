@@ -11,12 +11,9 @@ class NewFilePage extends StatelessWidget {
         backgroundColor: Theme.of(context).colorScheme.primary,
         toolbarHeight: 80,
         leading: const Icon(Icons.add, color: Colors.white, size: 35),
-        title: Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: Text(
-            '新增檔案',
-            style: Theme.of(context).textTheme.displayLarge,
-          ),
+        title: Text(
+          '新增檔案',
+          style: Theme.of(context).textTheme.displayLarge,
         ),
       ),
       body: const Center(
