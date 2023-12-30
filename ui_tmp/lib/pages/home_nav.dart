@@ -14,7 +14,7 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
 
-  int curInd = 0;
+  int curInd = 1;
   final List<Widget> pages = [
     HistoryPage(),
     NewFilePage(),
@@ -50,6 +50,7 @@ class _HomeState extends State<Home> {
             tabMargin: const EdgeInsets.symmetric(horizontal: 15.0),
             iconSize: 30,
 
+            selectedIndex: curInd,
             onTabChange: navigateBottomBar,
             tabs: const [
               GButton(
