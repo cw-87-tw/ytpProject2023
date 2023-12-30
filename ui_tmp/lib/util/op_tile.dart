@@ -10,16 +10,12 @@ class OpTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(23.0),
+      padding: const EdgeInsets.all(10.0),
       child: Container(
         padding: const EdgeInsets.all(20.0),
         decoration: BoxDecoration(
           color: Theme.of(context).colorScheme.secondary,
           borderRadius: BorderRadius.circular(15),
-          border: Border.all(
-            width: 2,
-            color: Theme.of(context).colorScheme.primary,
-          )
         ),
         child: Center(
           child: Text(
