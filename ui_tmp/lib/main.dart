@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:hive_flutter/adapters.dart';
 import 'package:ui_tmp/pages/login_page.dart';
 
-void main() async {
-  await Hive.initFlutter();
-  var box = await Hive.openBox('phoneDB');
+void main() {
   runApp(const MyApp());
 }
 
