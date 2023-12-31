@@ -6,12 +6,13 @@ import 'home_nav.dart';
 
 
 
-class LoginPage extends StatelessWidget {
+class RegisterPage extends StatelessWidget {
 
   final email_controller = TextEditingController();
   final password_controller = TextEditingController();
+  final confirmPw_controller = TextEditingController();
 
-  LoginPage({super.key});
+  RegisterPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -45,15 +46,15 @@ class LoginPage extends StatelessWidget {
                     hintText: '密碼',
                     obscureText: true,
                 ),
-                SizedBox(height: 30),
-                OpTile(opName: '登入'),
-                SizedBox(height: 50),
-                Text(
-                  '忘記密碼?',
-                  style: TextStyle(
-                    decoration: TextDecoration.underline,
-                  ),
+                SizedBox(height: 10),
+                LoginTextfield(
+                  controller: confirmPw_controller,
+                  hintText: '確認密碼',
+                  obscureText: true,
                 ),
+                SizedBox(height: 30),
+                OpTile(opName: '建立'),
+                SizedBox(height: 50),
               ],
             ),
           ),

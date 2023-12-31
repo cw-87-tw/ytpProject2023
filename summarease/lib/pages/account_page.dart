@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:summarease/util/account_info_tile.dart';
+import 'package:summarease/pages/login_or_register_page.dart';
 import 'package:summarease/util/op_tile.dart';
 
 class AccountPage extends StatelessWidget {
@@ -19,14 +19,18 @@ class AccountPage extends StatelessWidget {
         ),
         body: Center(
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Icon(
                   Icons.account_circle,
                   size: 200,
                   color: Colors.grey.shade300),
-              const AccountInfoTile(username: 'yayyyyy', something: 'blahblahblah'),
+              Text(
+                'username',
+                style: TextStyle(fontSize: 20),
+              ),
+              SizedBox(height: 50),
               const SizedBox(
                 width: 300,
                 child: Column(
@@ -36,6 +40,19 @@ class AccountPage extends StatelessWidget {
                   ],
                 ),
               ),
+              SizedBox(height: 30),
+              GestureDetector(
+                onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => LoginOrRegisterPage()),
+                ),
+                child: Text(
+                  '邪惡傳送門2!',
+                  style: TextStyle(
+                    decoration: TextDecoration.underline,
+                  ),
+                ),
+              )
             ],
           ),
         )

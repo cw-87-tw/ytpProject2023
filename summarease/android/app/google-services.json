@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "502683862331",
+    "project_id": "summarease-65c84",
+    "storage_bucket": "summarease-65c84.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:502683862331:android:237fed628ba59cb12a631e",
+        "android_client_info": {
+          "package_name": "com.example.summarease"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "502683862331-lv75d40r1fd7uq6f9c6ardb4vacav7t3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA042T0Vx30yqcsn99sxUdbw9IgArfoNeE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "502683862331-lv75d40r1fd7uq6f9c6ardb4vacav7t3.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "502683862331-q33r11k0mpr4qand3bdnel9svgcpu0um.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.summarease.RunnerTests"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

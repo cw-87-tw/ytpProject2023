@@ -16,6 +16,9 @@ class LoginPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+      ),
       backgroundColor: Theme.of(context).colorScheme.surface,
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 30.0),
@@ -27,10 +30,10 @@ class LoginPage extends StatelessWidget {
               children: [
                 Icon(
                   Icons.all_inclusive,
-                  size: 200,
+                  size: 150,
                   color: Theme.of(context).colorScheme.primary,
                 ),
-                SizedBox(height: 10),
+                SizedBox(height: 20),
                 LoginTextfield(
                   controller: email_controller,
                   hintText: 'Email',
@@ -42,28 +45,15 @@ class LoginPage extends StatelessWidget {
                     hintText: '密碼',
                     obscureText: true,
                 ),
-                SizedBox(height: 10),
+                SizedBox(height: 30),
                 OpTile(opName: '登入'),
-                SizedBox(height: 70),
+                SizedBox(height: 50),
                 Text(
                   '忘記密碼?',
                   style: TextStyle(
                     decoration: TextDecoration.underline,
                   ),
                 ),
-                SizedBox(height: 10),
-                GestureDetector(
-                  onTap: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => Home()),
-                  ),
-                  child: Text(
-                    '邪惡傳送門!',
-                    style: TextStyle(
-                      decoration: TextDecoration.underline,
-                    ),
-                  ),
-                )
               ],
             ),
           ),

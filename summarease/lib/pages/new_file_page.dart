@@ -20,13 +20,12 @@ class NewFilePage extends StatelessWidget {
           child: Padding(
             padding: EdgeInsets.all(50),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                OpTile(opName: '錄製影片'),
                 OpTile(opName: '上傳影片'),
-                OpTile(opName: '錄製音檔'),
+                SizedBox(height: 30),
                 OpTile(opName: '上傳音檔'),
-
+                SizedBox(height: 30),
                 OpTile(opName: '預設寄信對象',)
               ],
             ),
