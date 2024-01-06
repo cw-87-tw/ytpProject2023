@@ -2,9 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:summarease/util/login_textfield.dart';
 import 'package:summarease/util/op_tile.dart';
 
-import 'home_nav.dart';
-
-
 
 class RegisterPage extends StatefulWidget {
 
@@ -45,31 +42,31 @@ class _RegisterPageState extends State<RegisterPage> {
                   size: 150,
                   color: Theme.of(context).colorScheme.primary,
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 LoginTextfield(
                   controller: email_controller,
                   hintText: 'Email',
                   obscureText: false,
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 LoginTextfield(
                   controller: password_controller,
                     hintText: '密碼',
                     obscureText: true,
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 LoginTextfield(
                   controller: confirmPw_controller,
                   hintText: '確認密碼',
                   obscureText: true,
                 ),
-                SizedBox(height: 30),
-                OpTile(opName: '建立帳戶'),
-                SizedBox(height: 20),
+                const SizedBox(height: 30),
+                const OpTile(opName: '建立帳戶'),
+                const SizedBox(height: 20),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(
+                    const Text(
                       '已有帳戶?  ',
                       style: TextStyle(color: Colors.black54),
                     ),

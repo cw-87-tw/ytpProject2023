@@ -3,9 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:summarease/util/login_textfield.dart';
 import 'package:summarease/util/op_tile.dart';
 
-import 'home_nav.dart';
-
-
 
 class LoginPage extends StatefulWidget {
 
