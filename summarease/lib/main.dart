@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:summarease/pages/auth_page.dart';
 import 'package:summarease/pages/login_or_register_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
@@ -45,7 +46,7 @@ class MyApp extends StatelessWidget {
               )
           )
       ),
-      home: LoginOrRegisterPage(),
+      home: AuthPage(),
     );
   }
 }

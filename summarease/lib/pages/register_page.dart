@@ -6,13 +6,24 @@ import 'home_nav.dart';
 
 
 
-class RegisterPage extends StatelessWidget {
+class RegisterPage extends StatefulWidget {
+
+  void Function()? onTap;
+
+  RegisterPage({
+    super.key,
+    required this.onTap,
+  });
+
+  @override
+  State<RegisterPage> createState() => _RegisterPageState();
+}
+
+class _RegisterPageState extends State<RegisterPage> {
 
   final email_controller = TextEditingController();
   final password_controller = TextEditingController();
   final confirmPw_controller = TextEditingController();
-
-  RegisterPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -53,8 +64,27 @@ class RegisterPage extends StatelessWidget {
                   obscureText: true,
                 ),
                 SizedBox(height: 30),
-                OpTile(opName: '建立'),
-                SizedBox(height: 50),
+                OpTile(opName: '建立帳戶'),
+                SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      '已有帳戶?  ',
+                      style: TextStyle(color: Colors.black54),
+                    ),
+                    GestureDetector(
+                      onTap: widget.onTap,
+                      child: Text(
+                        '登入帳戶',
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.primary,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    )
+                  ],
+                ),
               ],
             ),
           ),

@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:summarease/util/login_textfield.dart';
 import 'package:summarease/util/op_tile.dart';
@@ -6,12 +7,49 @@ import 'home_nav.dart';
 
 
 
-class LoginPage extends StatelessWidget {
+class LoginPage extends StatefulWidget {
+
+  void Function()? onTap;
+
+  LoginPage({
+    super.key,
+    required this.onTap,
+  });
+
+  @override
+  State<LoginPage> createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
 
   final email_controller = TextEditingController();
   final password_controller = TextEditingController();
 
-  LoginPage({super.key});
+  void signUserIn() async {
+    
+    showDialog(
+      context: context,
+      builder: (context) {
+        return const Center(
+          child: CircularProgressIndicator(),
+        );
+      }
+    );
+    
+    await FirebaseAuth.instance.signInWithEmailAndPassword(
+      email: email_controller.text,
+      password: password_controller.text,
+    );
+
+    Navigator.pop(context);
+  }
+
+  @override
+  void dispose() {
+    email_controller.dispose();
+    password_controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -45,14 +83,43 @@ class LoginPage extends StatelessWidget {
                     hintText: '密碼',
                     obscureText: true,
                 ),
-                SizedBox(height: 30),
-                OpTile(opName: '登入'),
-                SizedBox(height: 50),
-                Text(
-                  '忘記密碼?',
-                  style: TextStyle(
-                    decoration: TextDecoration.underline,
+                Padding(
+                  padding: const EdgeInsets.all(15.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Text(
+                        '忘記密碼?',
+                        style: TextStyle(
+                          color: Colors.grey,
+                        ),
+                      ),
+                    ],
                   ),
+                ),
+                GestureDetector(
+                    onTap: signUserIn,
+                    child: OpTile(opName: '登入')
+                ),
+                SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      '不是用戶?  ',
+                      style: TextStyle(color: Colors.black54),
+                    ),
+                    GestureDetector(
+                      onTap: widget.onTap,
+                      child: Text(
+                        '建立帳戶',
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.primary,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    )
+                  ],
                 ),
               ],
             ),
