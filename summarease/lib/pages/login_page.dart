@@ -24,21 +24,21 @@ class _LoginPageState extends State<LoginPage> {
 
   void signUserIn() async {
     
-    showDialog(
-      context: context,
-      builder: (context) {
-        return const Center(
-          child: CircularProgressIndicator(),
-        );
-      }
-    );
+    // showDialog(
+    //   context: context,
+    //   builder: (context) {
+    //     return const Center(
+    //       child: CircularProgressIndicator(),
+    //     );
+    //   }
+    // );
     
     await FirebaseAuth.instance.signInWithEmailAndPassword(
       email: email_controller.text,
       password: password_controller.text,
     );
 
-    Navigator.pop(context);
+    // Navigator.pop(context);
   }
 
   @override
