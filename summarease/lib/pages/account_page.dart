@@ -4,7 +4,8 @@ import 'package:summarease/pages/login_or_register_page.dart';
 import 'package:summarease/util/op_tile.dart';
 
 class AccountPage extends StatelessWidget {
-  const AccountPage({super.key});
+  AccountPage({super.key});
+  final user = FirebaseAuth.instance.currentUser!;
 
   void signUserOut() {
     FirebaseAuth.instance.signOut();
@@ -32,7 +33,7 @@ class AccountPage extends StatelessWidget {
                   size: 200,
                   color: Colors.grey.shade300),
               Text(
-                'username',
+                user.email!,
                 style: TextStyle(fontSize: 20),
               ),
               SizedBox(height: 50),
@@ -49,18 +50,6 @@ class AccountPage extends StatelessWidget {
                 ),
               ),
               SizedBox(height: 30),
-              GestureDetector(
-                onTap: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => LoginOrRegisterPage()),
-                ),
-                child: Text(
-                  '邪惡傳送門2!',
-                  style: TextStyle(
-                    decoration: TextDecoration.underline,
-                  ),
-                ),
-              )
             ],
           ),
         )

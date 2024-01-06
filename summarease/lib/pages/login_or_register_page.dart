@@ -6,7 +6,7 @@ import 'package:summarease/pages/register_page.dart';
 
 class LoginOrRegisterPage extends StatefulWidget {
 
-  LoginOrRegisterPage({super.key});
+  const LoginOrRegisterPage({super.key});
 
   @override
   State<LoginOrRegisterPage> createState() => _LoginOrRegisterPageState();
@@ -27,6 +27,8 @@ class _LoginOrRegisterPageState extends State<LoginOrRegisterPage> {
     if (showLoginPage) {
       return LoginPage(onTap: togglePages);
     }
-    else return RegisterPage(onTap: togglePages);
+    else {
+      return RegisterPage(onTap: togglePages);
+    }
   }
 }

@@ -5,9 +5,9 @@ import 'package:summarease/util/op_tile.dart';
 
 class RegisterPage extends StatefulWidget {
 
-  void Function()? onTap;
+  final Function()? onTap;
 
-  RegisterPage({
+  const RegisterPage({
     super.key,
     required this.onTap,
   });

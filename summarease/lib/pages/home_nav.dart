@@ -16,8 +16,8 @@ class _HomeState extends State<Home> {
 
   int curInd = 1;
   final List<Widget> pages = [
-    HistoryPage(),
-    NewFilePage(),
+    const HistoryPage(),
+    const NewFilePage(),
     AccountPage(),
   ];
 
