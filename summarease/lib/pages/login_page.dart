@@ -23,7 +23,7 @@ class _LoginPageState extends State<LoginPage> {
   final password_controller = TextEditingController();
 
   void signUserIn() async {
-    
+    //loading circle
     showDialog(
       context: context,
       builder: (context) {
@@ -32,12 +32,26 @@ class _LoginPageState extends State<LoginPage> {
         );
       }
     );
-    
-    await FirebaseAuth.instance.signInWithEmailAndPassword(
-      email: email_controller.text,
-      password: password_controller.text,
-    );
-
+    //sign in
+    try {
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: email_controller.text,
+        password: password_controller.text,
+      );
+    } on FirebaseAuthException catch (e) {
+      Navigator.pop(context);
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            backgroundColor: Colors.red.shade100,
+            title: Center(
+              child: Text(e.code, style: TextStyle(color: Colors.red.shade300))
+            ),
+          );
+        }
+      );
+    }
     Navigator.pop(context);
   }
 
