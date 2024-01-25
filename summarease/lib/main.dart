@@ -24,6 +24,7 @@ class MyApp extends StatelessWidget {
             secondary: Colors.cyan.shade100,
             background: Colors.white,
             surface: Colors.cyan.shade50,
+            outline: Colors.cyan.shade300,
           ),
           textTheme: const TextTheme(
               displayLarge: TextStyle(

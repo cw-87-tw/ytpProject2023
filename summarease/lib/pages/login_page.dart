@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:summarease/util/login_textfield.dart';
 import 'package:summarease/util/op_tile.dart';
 
-
 class LoginPage extends StatefulWidget {
 
   final Function()? onTap;
@@ -38,21 +37,40 @@ class _LoginPageState extends State<LoginPage> {
         email: email_controller.text,
         password: password_controller.text,
       );
+      Navigator.pop(context);
     } on FirebaseAuthException catch (e) {
       Navigator.pop(context);
-      showDialog(
+      showError(e.code);
+    }
+  }
+
+  void showError(String msg) {
+    showDialog(
         context: context,
         builder: (context) {
           return AlertDialog(
             backgroundColor: Colors.red.shade100,
-            title: Center(
-              child: Text(e.code, style: TextStyle(color: Colors.red.shade300))
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10.0),
+              // side: BorderSide(width: 2, color: Colors.red.shade300)
+            ),
+            title: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Center(
+                  child: Row(
+                    children: [
+                      Icon(Icons.warning_amber, color: Colors.red.shade300,),
+                      Text(
+                        ' Error: ' + msg,
+                        style: TextStyle(color: Colors.red.shade300, fontSize: 20)
+                      ),
+                    ],
+                  )
+              ),
             ),
           );
         }
-      );
-    }
-    Navigator.pop(context);
+    );
   }
 
   @override
@@ -65,9 +83,6 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-      ),
       backgroundColor: Theme.of(context).colorScheme.surface,
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 30.0),
@@ -77,12 +92,29 @@ class _LoginPageState extends State<LoginPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Icon(
-                  Icons.all_inclusive,
-                  size: 150,
-                  color: Theme.of(context).colorScheme.primary,
+                Container(
+                  height: 200,
+                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(20.0)),
+                  clipBehavior: Clip.antiAlias,
+                  child: Image.asset('assets/summarease_logo.png', fit: BoxFit.cover,)
                 ),
                 SizedBox(height: 20),
+                Text(
+                  'SUMMAREASE',
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 30,
+                    fontWeight: FontWeight.bold
+                  ),
+                ),
+                Text(
+                  'Summarize with ease.',
+                  style: TextStyle(
+                    color: Colors.grey,
+                    fontSize: 20,
+                  ),
+                ),
+                SizedBox(height: 50),
                 LoginTextfield(
                   controller: email_controller,
                   hintText: 'Email',
@@ -95,7 +127,7 @@ class _LoginPageState extends State<LoginPage> {
                     obscureText: true,
                 ),
                 Padding(
-                  padding: const EdgeInsets.all(15.0),
+                  padding: const EdgeInsets.all(10.0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
@@ -108,9 +140,10 @@ class _LoginPageState extends State<LoginPage> {
                     ],
                   ),
                 ),
-                GestureDetector(
-                    onTap: signUserIn,
-                    child: OpTile(opName: '登入')
+                OpTile(
+                  opName: '登入',
+                  color: Theme.of(context).colorScheme.primary,
+                  onTap: signUserIn,
                 ),
                 SizedBox(height: 20),
                 Row(
@@ -125,7 +158,7 @@ class _LoginPageState extends State<LoginPage> {
                       child: Text(
                         '建立帳戶',
                         style: TextStyle(
-                          color: Theme.of(context).colorScheme.primary,
+                          color: Theme.of(context).colorScheme.outline,
                           fontWeight: FontWeight.bold,
                         ),
                       ),

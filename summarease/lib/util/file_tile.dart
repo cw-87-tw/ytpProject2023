@@ -12,7 +12,7 @@ class FileTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+      padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 5),
       child: Container(
         decoration: BoxDecoration(
           color: Colors.grey.shade100,

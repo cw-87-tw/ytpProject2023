@@ -36,14 +36,14 @@ class _HomeState extends State<Home> {
       body: pages[curInd],
 
       bottomNavigationBar: Container(
-        color: Theme.of(context).colorScheme.primary,
+        color: Theme.of(context).colorScheme.secondary,
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 15.0),
           child: GNav(
             gap: 8,
             padding: const EdgeInsets.all(18.0),
-            backgroundColor: Theme.of(context).colorScheme.primary,
-            color: Theme.of(context).colorScheme.secondary,
+            backgroundColor: Theme.of(context).colorScheme.secondary,
+            color: Theme.of(context).colorScheme.background,
             activeColor: Theme.of(context).colorScheme.primary,
             tabBackgroundColor: Theme.of(context).colorScheme.background,
             mainAxisAlignment: MainAxisAlignment.center,
