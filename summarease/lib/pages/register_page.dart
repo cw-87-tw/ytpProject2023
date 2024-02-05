@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:summarease/util/login_textfield.dart';
@@ -21,7 +22,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
   final email_controller = TextEditingController();
   final password_controller = TextEditingController();
-  final confirmPw_controller = TextEditingController();
+  final confirmPassword_controller = TextEditingController();
 
   void signUserUp() async {
     //loading circle
@@ -35,11 +36,15 @@ class _RegisterPageState extends State<RegisterPage> {
     );
     //sign in
     try {
-      if (password_controller.text == confirmPw_controller.text) {
+      if (password_controller.text == confirmPassword_controller.text) {
         await FirebaseAuth.instance.createUserWithEmailAndPassword(
-          email: email_controller.text,
-          password: password_controller.text,
+          email: email_controller.text.trim(),
+          password: password_controller.text.trim(),
         );
+        await FirebaseFirestore.instance.collection('users').add({
+          'Email': email_controller.text.trim(),
+          'Password': password_controller.text.trim(),
+        });
         Navigator.pop(context);
       }
       else {
@@ -140,7 +145,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 ),
                 const SizedBox(height: 10),
                 LoginTextfield(
-                  controller: confirmPw_controller,
+                  controller: confirmPassword_controller,
                   hintText: '確認密碼',
                   obscureText: true,
                 ),

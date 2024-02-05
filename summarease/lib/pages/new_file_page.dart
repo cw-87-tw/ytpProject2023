@@ -4,8 +4,35 @@ import '../util/op_tile.dart';
 class NewFilePage extends StatelessWidget {
   const NewFilePage({super.key});
 
+  Future<void> uploadFileToFirebase(String filePath) async {
+    // Replace "your_collection" and "your_field" with your Firebase collection and field names
+    CollectionReference collection = FirebaseFirestore.instance.collection('your_collection');
+
+    // Read the content of the video file as bytes
+    List<int> fileBytes = await File(filePath).readAsBytes();
+
+    // Upload the content to Firebase
+    await collection.add({
+      'your_video_field': fileBytes,
+    });
+
+    // Show a message or perform any other action after successful upload
+    print('Video uploaded to Firebase successfully!');
+  }
+
   void uploadVideo() {
-    //
+    String filePath = '';
+
+    Future<void> pickAndUploadFile() async {
+      FilePickerResult? result = await FilePicker.platform.pickFiles(
+        type: FileType.video,
+      );
+
+      if (result != null) {
+        filePath = result.files.single.path!;
+        uploadFileToFirebase(filePath);
+      }
+    }    
   }
 
   void uploadAudio() {
