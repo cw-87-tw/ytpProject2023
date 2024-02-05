@@ -1,38 +1,39 @@
+import 'dart:io';
+import 'package:summarease/pages/register_page.dart';
 import 'package:flutter/material.dart';
 import '../util/op_tile.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class NewFilePage extends StatelessWidget {
   const NewFilePage({super.key});
 
-  Future<void> uploadFileToFirebase(String filePath) async {
-    // Replace "your_collection" and "your_field" with your Firebase collection and field names
-    CollectionReference collection = FirebaseFirestore.instance.collection('your_collection');
+  Future<void> uploadVideo() async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: ['mp4', 'avi', 'mkv', 'flv'],
+    );
 
-    // Read the content of the video file as bytes
-    List<int> fileBytes = await File(filePath).readAsBytes();
+    if (result != null) {
+      print("Successfully Uploaded YAYA!");
 
-    // Upload the content to Firebase
-    await collection.add({
-      'your_video_field': fileBytes,
-    });
+      final storageRef = FirebaseStorage.instance.ref();
 
-    // Show a message or perform any other action after successful upload
-    print('Video uploaded to Firebase successfully!');
-  }
+      final videosRef = storageRef.child("videos");
 
-  void uploadVideo() {
-    String filePath = '';
+      Directory appDocDir = await getApplicationDocumentsDirectory();
+      String filePath = '${appDocDir.absolute}/file-to-upload.png';
+      File file = File(filePath);
 
-    Future<void> pickAndUploadFile() async {
-      FilePickerResult? result = await FilePicker.platform.pickFiles(
-        type: FileType.video,
-      );
-
-      if (result != null) {
-        filePath = result.files.single.path!;
-        uploadFileToFirebase(filePath);
+      try {
+        await videosRef.putFile(file);
+      } on firebase_core.FirebaseException catch (e) {
+        // ...
       }
-    }    
+    } else {
+      print("No file selected");
+    }
   }
 
   void uploadAudio() {
@@ -81,7 +82,6 @@ class NewFilePage extends StatelessWidget {
               ],
             ),
           ),
-        )
-    );
+        ));
   }
 }
