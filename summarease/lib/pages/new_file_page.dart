@@ -1,10 +1,9 @@
 import 'dart:io';
-import 'package:summarease/pages/register_page.dart';
-import 'package:flutter/material.dart';
 import '../util/op_tile.dart';
+import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
 class NewFilePage extends StatelessWidget {
   const NewFilePage({super.key});
@@ -16,21 +15,19 @@ class NewFilePage extends StatelessWidget {
     );
 
     if (result != null) {
-      print("Successfully Uploaded YAYA!");
-
+      File file = File(result.files.single.path!);
       final storageRef = FirebaseStorage.instance.ref();
+      // The file's name should be the email of the user, instead of "test."
+      final videosRef = storageRef.child("Videos/test");
+      await videosRef.putFile(file);
+      await FirebaseFirestore.instance.collection('users').add({
+        // It's a reference type now, but I think it should be an array of reference.
+        'Video': videosRef,
+      });
 
-      final videosRef = storageRef.child("videos");
-
-      Directory appDocDir = await getApplicationDocumentsDirectory();
-      String filePath = '${appDocDir.absolute}/file-to-upload.png';
-      File file = File(filePath);
-
-      try {
-        await videosRef.putFile(file);
-      } on firebase_core.FirebaseException catch (e) {
-        // ...
-      }
+      // It fails to add the reference into the user's collection.
+      // There are errors, so it won't print this line.
+      print("--------------------- Successfully upload to Firestore DB!!!");
     } else {
       print("No file selected");
     }
