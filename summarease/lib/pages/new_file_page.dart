@@ -11,23 +11,23 @@ class NewFilePage extends StatelessWidget {
   Future<void> uploadVideo() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(
       type: FileType.custom,
-      allowedExtensions: ['mp4', 'avi', 'mkv', 'flv'],
+      allowedExtensions: ['mp4', 'avi', 'mkv', 'flv', 'mov'],
     );
 
     if (result != null) {
       File file = File(result.files.single.path!);
       final storageRef = FirebaseStorage.instance.ref();
       // The file's name should be the email of the user, instead of "test."
-      final videosRef = storageRef.child("Videos/test");
+      final videosRef = storageRef.child("Videos/testing");
       await videosRef.putFile(file);
+      print("--------------------- Successfully upload to Firestore DB!!!");
       await FirebaseFirestore.instance.collection('users').add({
         // It's a reference type now, but I think it should be an array of reference.
-        'Video': videosRef,
+        'UserVideo': videosRef,
       });
 
       // It fails to add the reference into the user's collection.
       // There are errors, so it won't print this line.
-      print("--------------------- Successfully upload to Firestore DB!!!");
     } else {
       print("No file selected");
     }
