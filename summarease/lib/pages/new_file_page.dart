@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:summarease/util/get_current_user_info.dart';
 
 class NewFilePage extends StatelessWidget {
   const NewFilePage({super.key});
@@ -17,17 +18,18 @@ class NewFilePage extends StatelessWidget {
     if (result != null) {
       File file = File(result.files.single.path!);
       final storageRef = FirebaseStorage.instance.ref();
+
       // The file's name should be the email of the user, instead of "test."
       final videosRef = storageRef.child("Videos/testing");
       await videosRef.putFile(file);
       print("--------------------- Successfully upload to Firestore DB!!!");
-      await FirebaseFirestore.instance.collection('users').add({
-        // It's a reference type now, but I think it should be an array of reference.
+
+      String userId = getCurrentUserId();
+      DocumentReference userDocRef =
+          FirebaseFirestore.instance.collection('users').doc(userId);
+      await userDocRef.update({
         'UserVideo': videosRef,
       });
-
-      // It fails to add the reference into the user's collection.
-      // There are errors, so it won't print this line.
     } else {
       print("No file selected");
     }
