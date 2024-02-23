@@ -4,6 +4,7 @@ import 'package:google_nav_bar/google_nav_bar.dart';
 import 'account_page.dart';
 import 'history_page.dart';
 import 'new_file_page.dart';
+import 'test_page.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -19,6 +20,7 @@ class _HomeState extends State<Home> {
     const HistoryPage(),
     const NewFilePage(),
     AccountPage(),
+    TestPage(),
   ];
 
   void navigateBottomBar(int ind) {
@@ -64,6 +66,10 @@ class _HomeState extends State<Home> {
               GButton(
                 icon: Icons.person,
                 text: '個人帳號',
+              ),
+              GButton(
+                icon: Icons.pan_tool_alt_sharp,
+                text: '測試專區',
               ),
             ],
           ),
