@@ -1,0 +1,1 @@
+const apiKey = "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"; // 0224API key
