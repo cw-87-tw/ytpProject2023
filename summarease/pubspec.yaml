@@ -52,6 +52,7 @@ dependencies:
 
   # video to text
   flutter_ffmpeg: ^0.4.2
+  # flutter_sound: ^8.0.0
 
 dev_dependencies:
   flutter_test:

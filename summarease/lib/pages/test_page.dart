@@ -4,9 +4,15 @@ import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import '../process/videoToText.dart';
 
-class TestPage extends StatelessWidget {
+class TestPage extends StatefulWidget {
   const TestPage({super.key});
 
+  @override
+  State<TestPage> createState() => _TestPageState();
+}
+
+class _TestPageState extends State<TestPage> {
+  String displayText = "Haven't transcripted yet";
   Future<void> uploadVideo() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(
       type: FileType.custom,
@@ -17,14 +23,13 @@ class TestPage extends StatelessWidget {
       File file = File(result.files.single.path!);
       print("\n\n\nReceived user file\n\n\n");
       // call the whisper API here
-      convertSpeechToText(file.path);
-    }
-    else {
+      setState(() async {
+        displayText = await convertSpeechToText(file.path);
+      }); 
+    } else {
       print("No file selected");
     }
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -49,6 +54,7 @@ class TestPage extends StatelessWidget {
                   color: Theme.of(context).colorScheme.secondary,
                   onTap: uploadVideo,
                 ),
+                Text(displayText)
               ],
             ),
           ),
