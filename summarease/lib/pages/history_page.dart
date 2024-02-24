@@ -1,8 +1,36 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:summarease/read%20data/get_user_video_info.dart';
 import '../util/file_tile.dart';
 
-class HistoryPage extends StatelessWidget {
+class HistoryPage extends StatefulWidget {
   const HistoryPage({super.key});
+
+  @override
+  State<HistoryPage> createState() => _HistoryPageState();
+}
+
+class _HistoryPageState extends State<HistoryPage> {
+  final user = FirebaseAuth.instance.currentUser!;
+
+  List<String> videoIDs = [];
+
+  CollectionReference files = FirebaseFirestore.instance.collection('userFile');
+
+  Future getVideoIDs() async {
+    await files.doc(user.uid).collection('userVideos').get().then(
+      (snapshot) => snapshot.docs.forEach((video) {
+        videoIDs.add(video.reference.id);
+      })
+    );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -18,18 +46,18 @@ class HistoryPage extends StatelessWidget {
       ),
       body: Center(
         //到時候會改成ListView.builder()
-        child: ListView(
-          padding: const EdgeInsets.only(top: 40.0),
-          children: const [
-            FileTile(
-                fileName: 'file1',
-                fileTime: '2023-12-30 00:00'
-            ),
-            FileTile(
-                fileName: 'file2',
-                fileTime: '2023-12-30 11:11'
-            ),
-          ],
+        child: Expanded(
+          child: FutureBuilder(
+            future: getVideoIDs(),
+            builder: (context, snapshot) {
+              return ListView.builder(
+                itemCount: videoIDs.length,
+                itemBuilder: (context, index) {
+                  return GetUserVideoInfo(videoID: videoIDs[index], files: files, userID: user.uid,);
+                }
+              );
+            },
+          )
         ),
       ),
     );

@@ -20,6 +20,7 @@ class NewFilePage extends StatelessWidget {
       final storageRef = FirebaseStorage.instance.ref();
 
       // The file's name should be the email of the user, instead of "test."
+      // wait, r we using the email or the userid??
       final videosRef = storageRef.child("Videos/testing");
       await videosRef.putFile(file);
       print("--------------------- Successfully upload to Firestore DB!!!");
