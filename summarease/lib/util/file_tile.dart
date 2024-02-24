@@ -33,10 +33,17 @@ class FileTile extends StatelessWidget {
                       Text(
                         fileName,
                         style: Theme.of(context).textTheme.bodyLarge,
+                        //textoverflow does not work (might be cuz i lack "expanded"?)
+                        // softWrap: false,
+                        // maxLines: 1,
+                        // overflow: TextOverflow.ellipsis,
                       ),
                       Text(
                         fileTime,
                         style: Theme.of(context).textTheme.bodySmall,
+                        // softWrap: false,
+                        // maxLines: 1,
+                        // overflow: TextOverflow.ellipsis,
                       )
                     ],
                   ),
