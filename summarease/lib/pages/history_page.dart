@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:summarease/read%20data/get_user_video_info.dart';
 import '../util/file_tile.dart';
+import '../util/get_current_user_info.dart';
 
 class HistoryPage extends StatefulWidget {
   const HistoryPage({super.key});
@@ -12,14 +13,14 @@ class HistoryPage extends StatefulWidget {
 }
 
 class _HistoryPageState extends State<HistoryPage> {
-  final user = FirebaseAuth.instance.currentUser!;
+  final userID = getCurrentUserId();
 
   List<String> videoIDs = [];
 
   CollectionReference files = FirebaseFirestore.instance.collection('userFile');
 
   Future getVideoIDs() async {
-    await files.doc(user.uid).collection('userVideos').get().then(
+    await files.doc(userID).collection('userVideos').get().then(
       (snapshot) => snapshot.docs.forEach((video) {
         videoIDs.add(video.reference.id);
       })
@@ -45,19 +46,21 @@ class _HistoryPageState extends State<HistoryPage> {
         ),
       ),
       body: Center(
-        //到時候會改成ListView.builder()
-        child: Expanded(
-          child: FutureBuilder(
-            future: getVideoIDs(),
-            builder: (context, snapshot) {
-              return ListView.builder(
-                itemCount: videoIDs.length,
-                itemBuilder: (context, index) {
-                  return GetUserVideoInfo(videoID: videoIDs[index], files: files, userID: user.uid,);
-                }
-              );
-            },
-          )
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 10.0),
+          child: Expanded(
+            child: FutureBuilder(
+              future: getVideoIDs(),
+              builder: (context, snapshot) {
+                return ListView.builder(
+                  itemCount: videoIDs.length,
+                  itemBuilder: (context, index) {
+                    return GetUserVideoInfo(videoID: videoIDs[index], files: files, userID: userID,);
+                  }
+                );
+              },
+            )
+          ),
         ),
       ),
     );
