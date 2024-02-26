@@ -23,16 +23,23 @@ class NewFilePage extends StatelessWidget {
       // wait, r we using the email or the userid??
       final videosRef = storageRef.child("Videos/testing");
       await videosRef.putFile(file);
-      print("--------------------- Successfully upload to Firestore DB!!!");
+      print("---------- Successfully upload to Storage!!! ----------");
 
       String userId = getCurrentUserId();
-      DocumentReference userDocRef =
-          FirebaseFirestore.instance.collection('users').doc(userId);
+      DocumentReference userDocRef = FirebaseFirestore.instance
+          .collection('userFile')
+          .doc(userId)
+          .collection('userVideos')
+          .doc('dK7C2uxW3AXLO8gmWtmp');
       await userDocRef.update({
         'UserVideo': videosRef,
+      }).then((value) {
+        print("---------- Successfully updated reference!!! ----------");
+      }).catchError((error) {
+        print("---------- Failed to update reference :( ----------");
       });
     } else {
-      print("No file selected");
+      print("---------- No file selected ----------");
     }
   }
 
