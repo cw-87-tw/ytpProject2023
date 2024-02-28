@@ -23,6 +23,9 @@ class _TestPageState extends State<TestPage> {
       File file = File(result.files.single.path!);
       print("\n\n\nReceived user file\n\n\n");
       // call the whisper API here
+      setState(() {
+        displayText = "processing...";
+      });
       var upd = await convertSpeechToText(file.path);
       setState(() {
         displayText = upd;
