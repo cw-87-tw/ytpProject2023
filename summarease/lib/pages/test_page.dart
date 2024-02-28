@@ -23,9 +23,10 @@ class _TestPageState extends State<TestPage> {
       File file = File(result.files.single.path!);
       print("\n\n\nReceived user file\n\n\n");
       // call the whisper API here
-      setState(() async {
-        displayText = await convertSpeechToText(file.path);
-      }); 
+      var upd = await convertSpeechToText(file.path);
+      setState(() {
+        displayText = upd;
+      });
     } else {
       print("No file selected");
     }
