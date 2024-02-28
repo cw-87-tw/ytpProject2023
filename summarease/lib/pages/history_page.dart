@@ -27,14 +27,11 @@ Future getVideoIDs() async {
           }));
 }
 
-<<<<<<< HEAD
-  Future getVideoIDs() async {
-    videoIDs.clear();
-    await files.doc(userID).collection('userVideos').get().then(
-      (snapshot) => snapshot.docs.forEach((video) {
-        videoIDs.add(video.reference.id);
-      })
-    );
+
+class _HistoryPageState extends State<HistoryPage> {
+  @override
+  void initState() {
+    super.initState();
   }
 
   bool showingSummary = false;
@@ -47,15 +44,6 @@ Future getVideoIDs() async {
       _summary = summary;
       _script = script;
     });
-  }
-
-  
-=======
-class _HistoryPageState extends State<HistoryPage> {
->>>>>>> a02dcb60cc3d087b618ac6a7020e868c009a78f6
-  @override
-  void initState() {
-    super.initState();
   }
 
   CollectionReference files = FirebaseFirestore.instance.collection('userFile');
@@ -76,7 +64,6 @@ class _HistoryPageState extends State<HistoryPage> {
       body: Center(
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 10.0),
-<<<<<<< HEAD
           child: FutureBuilder(
             future: getVideoIDs(),
             builder: (context, snapshot) {
@@ -93,23 +80,6 @@ class _HistoryPageState extends State<HistoryPage> {
               }
             },
           ),
-=======
-          child: Expanded(
-              child: FutureBuilder(
-            future: getVideoIDs(),
-            builder: (context, snapshot) {
-              return ListView.builder(
-                  itemCount: videoIDs.length,
-                  itemBuilder: (context, index) {
-                    return GetUserVideoInfo(
-                      videoID: videoIDs[index],
-                      files: files,
-                      userID: userID,
-                    );
-                  });
-            },
-          )),
->>>>>>> a02dcb60cc3d087b618ac6a7020e868c009a78f6
         ),
       ),
     );
