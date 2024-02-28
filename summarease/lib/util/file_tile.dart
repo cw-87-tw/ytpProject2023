@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:summarease/pages/summary_page.dart';
 
 class FileTile extends StatelessWidget {
   final Map<String, dynamic> data;
@@ -29,7 +28,7 @@ class FileTile extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Icon(Icons.video_file, size: 30,),
+              const Icon(Icons.video_file, size: 30,),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
