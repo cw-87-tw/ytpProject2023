@@ -3,6 +3,7 @@ import '../util/op_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import '../process/videoToText.dart';
+import '../process/textSummary.dart';
 
 class TestPage extends StatefulWidget {
   const TestPage({super.key});
@@ -23,12 +24,28 @@ class _TestPageState extends State<TestPage> {
       File file = File(result.files.single.path!);
       print("\n\n\nReceived user file\n\n\n");
       // call the whisper API here
-      setState(() async {
-        displayText = await convertSpeechToText(file.path);
-      }); 
-    } else {
+      setState(() {
+        displayText = "processing...";
+      });
+      var transcription = await convertSpeechToText(file.path);
+      setState(() {
+        displayText = transcription;
+      });
+      var summary = await summarizeText(transcription);
+      setState(() {
+        displayText = summary;
+      });
+    } 
+    else {
       print("No file selected");
     }
+  }
+
+  Future<void> summaryTest() async {
+    var res = await summarizeText("Hello, nice to meet you");
+    setState(() {
+        displayText = res;
+    });
   }
 
   @override
@@ -53,6 +70,11 @@ class _TestPageState extends State<TestPage> {
                   opName: '上傳影片',
                   color: Theme.of(context).colorScheme.secondary,
                   onTap: uploadVideo,
+                ),
+                OpTile(
+                  opName: 'test',
+                  color: Theme.of(context).colorScheme.secondary,
+                  onTap: summaryTest,
                 ),
                 Text(displayText)
               ],
