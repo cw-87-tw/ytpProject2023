@@ -12,26 +12,28 @@ class HistoryPage extends StatefulWidget {
   State<HistoryPage> createState() => _HistoryPageState();
 }
 
-class _HistoryPageState extends State<HistoryPage> {
-  final userID = getCurrentUserId();
+List<String> videoIDs = [];
 
-  List<String> videoIDs = [];
-
+Future getVideoIDs() async {
   CollectionReference files = FirebaseFirestore.instance.collection('userFile');
+  final userID = getCurrentUserId();
+  await files
+      .doc(userID)
+      .collection('userVideos')
+      .get()
+      .then((snapshot) => snapshot.docs.forEach((video) {
+            videoIDs.add(video.reference.id);
+          }));
+}
 
-  Future getVideoIDs() async {
-    await files.doc(userID).collection('userVideos').get().then(
-      (snapshot) => snapshot.docs.forEach((video) {
-        videoIDs.add(video.reference.id);
-      })
-    );
-  }
-
+class _HistoryPageState extends State<HistoryPage> {
   @override
   void initState() {
     super.initState();
   }
 
+  CollectionReference files = FirebaseFirestore.instance.collection('userFile');
+  final userID = getCurrentUserId();
 
   @override
   Widget build(BuildContext context) {
@@ -49,18 +51,20 @@ class _HistoryPageState extends State<HistoryPage> {
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 10.0),
           child: Expanded(
-            child: FutureBuilder(
-              future: getVideoIDs(),
-              builder: (context, snapshot) {
-                return ListView.builder(
+              child: FutureBuilder(
+            future: getVideoIDs(),
+            builder: (context, snapshot) {
+              return ListView.builder(
                   itemCount: videoIDs.length,
                   itemBuilder: (context, index) {
-                    return GetUserVideoInfo(videoID: videoIDs[index], files: files, userID: userID,);
-                  }
-                );
-              },
-            )
-          ),
+                    return GetUserVideoInfo(
+                      videoID: videoIDs[index],
+                      files: files,
+                      userID: userID,
+                    );
+                  });
+            },
+          )),
         ),
       ),
     );

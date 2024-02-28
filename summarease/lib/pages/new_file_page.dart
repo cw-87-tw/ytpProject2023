@@ -5,6 +5,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:summarease/util/get_current_user_info.dart';
+import 'package:summarease/pages/history_page.dart';
 
 class NewFilePage extends StatelessWidget {
   const NewFilePage({super.key});
@@ -23,21 +24,27 @@ class NewFilePage extends StatelessWidget {
       // wait, r we using the email or the userid??
       final videosRef = storageRef.child("Videos/testing");
       await videosRef.putFile(file);
-      print("---------- Successfully upload to Storage!!! ----------");
+      // print("---------- Successfully upload to Storage!!! ----------");
+      // print("---------- reference: $videosRef ----------");
 
       String userId = getCurrentUserId();
-      DocumentReference userDocRef = FirebaseFirestore.instance
+      // print("---------- userID: $userId ----------");
+
+      Map<String, dynamic> userVideoData = {
+        'path': videosRef.fullPath,
+      };
+
+      getVideoIDs();
+      await FirebaseFirestore.instance
           .collection('userFile')
           .doc(userId)
           .collection('userVideos')
-          .doc('dK7C2uxW3AXLO8gmWtmp');
-      await userDocRef.update({
-        'UserVideo': videosRef,
-      }).then((value) {
-        print("---------- Successfully updated reference!!! ----------");
-      }).catchError((error) {
-        print("---------- Failed to update reference :( ----------");
-      });
+          .doc('video #${videoIDs.length}')
+          .set(userVideoData)
+          .then((value) =>
+              print("---------- Successfully updated reference!!! ----------"))
+          .catchError((error) =>
+              print("---------- Failed to update reference :( ----------"));
     } else {
       print("---------- No file selected ----------");
     }

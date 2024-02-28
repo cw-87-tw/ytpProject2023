@@ -3,10 +3,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:summarease/util/login_textfield.dart';
 import 'package:summarease/util/op_tile.dart';
-
+import 'package:summarease/util/get_current_user_info.dart';
 
 class RegisterPage extends StatefulWidget {
-
   final Function()? onTap;
 
   const RegisterPage({
@@ -19,7 +18,6 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
-
   final email_controller = TextEditingController();
   final password_controller = TextEditingController();
   final confirmPassword_controller = TextEditingController();
@@ -32,8 +30,7 @@ class _RegisterPageState extends State<RegisterPage> {
           return const Center(
             child: CircularProgressIndicator(),
           );
-        }
-    );
+        });
     //sign in
     try {
       if (password_controller.text == confirmPassword_controller.text) {
@@ -41,13 +38,23 @@ class _RegisterPageState extends State<RegisterPage> {
           email: email_controller.text.trim(),
           password: password_controller.text.trim(),
         );
-        await FirebaseFirestore.instance.collection('users').add({
-          'Email': email_controller.text.trim(),
-          'Password': password_controller.text.trim(),
-        });
+
+        String userId = getCurrentUserId();
+        Map<String, dynamic> userRegisterData = {
+          'email': email_controller.text.trim(),
+          'password': password_controller.text.trim(),
+        };
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(userId)
+            .set(userRegisterData)
+            .then(
+                (value) => print("---------- added users document ----------"))
+            .catchError((error) =>
+                print("---------- failed adding users document ----------"));
+
         Navigator.pop(context);
-      }
-      else {
+      } else {
         Navigator.pop(context);
         showError('passwords don\'t match');
       }
@@ -71,23 +78,23 @@ class _RegisterPageState extends State<RegisterPage> {
               padding: const EdgeInsets.all(8.0),
               child: Center(
                   child: Row(
-                    children: [
-                      Icon(Icons.warning_amber, color: Colors.red.shade300,),
-                      Expanded(
-                        child: FittedBox(
-                          child: Text(
-                              ' Error: ' + msg,
-                              style: TextStyle(color: Colors.red.shade300, fontSize: 20)
-                          ),
-                        ),
-                      ),
-                    ],
-                  )
-              ),
+                children: [
+                  Icon(
+                    Icons.warning_amber,
+                    color: Colors.red.shade300,
+                  ),
+                  Expanded(
+                    child: FittedBox(
+                      child: Text(' Error: ' + msg,
+                          style: TextStyle(
+                              color: Colors.red.shade300, fontSize: 20)),
+                    ),
+                  ),
+                ],
+              )),
             ),
           );
-        }
-    );
+        });
   }
 
   @override
@@ -111,18 +118,20 @@ class _RegisterPageState extends State<RegisterPage> {
               children: [
                 Container(
                     height: 170,
-                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(20.0)),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20.0)),
                     clipBehavior: Clip.antiAlias,
-                    child: Image.asset('assets/summarease_logo.png', fit: BoxFit.cover,)
-                ),
+                    child: Image.asset(
+                      'assets/summarease_logo.png',
+                      fit: BoxFit.cover,
+                    )),
                 SizedBox(height: 17),
                 Text(
                   'SUMMAREASE',
                   style: TextStyle(
                       color: Colors.black,
                       fontSize: 25,
-                      fontWeight: FontWeight.bold
-                  ),
+                      fontWeight: FontWeight.bold),
                 ),
                 Text(
                   'Summarize with ease.',
@@ -140,8 +149,8 @@ class _RegisterPageState extends State<RegisterPage> {
                 const SizedBox(height: 10),
                 LoginTextfield(
                   controller: password_controller,
-                    hintText: '密碼',
-                    obscureText: true,
+                  hintText: '密碼',
+                  obscureText: true,
                 ),
                 const SizedBox(height: 10),
                 LoginTextfield(
