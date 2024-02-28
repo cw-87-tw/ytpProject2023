@@ -48,7 +48,7 @@ class MyApp extends StatelessWidget {
                 color: Colors.black38,
                 fontSize: 15,
               ))),
-      home: AuthPage(),
+      home: const AuthPage(),
     );
   }
 }

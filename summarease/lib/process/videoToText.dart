@@ -37,35 +37,6 @@ Future<String> extractAudio(String videoFilePath) async {
   }
 }
 
-// Future<String> convertSpeechToText(String filePath) async {
-//   // print("$filePath");
-//   String audioFilePath = await extractAudio(filePath);
-//   print("extraction finished\n");
-//   if (audioFilePath.isEmpty) {
-//     print('Audio extraction failed');
-//     return ''; // Return empty string if audio extraction failed
-//   } else {
-//     print('Got extracted audio\n$audioFilePath\n\n\n');
-//     print("audio Size: ${File(audioFilePath).lengthSync()}");
-//     print("video Size: ${File(filePath).lengthSync()}");
-//   }
-
-//   var url = Uri.https("api.openai.com", "v1/audio/transcriptions");
-//   var request = http.MultipartRequest('POST', url);
-//   request.headers.addAll(({"Authorization": "Bearer $apiKey"}));
-//   request.fields["model"] = 'whisper-1';
-//   request.fields["language"] = "zh";
-//   request.fields["response_format"] = "text";
-//   request.files.add(await http.MultipartFile.fromPath(
-//       'file', audioFilePath)); // change the path to audioFilePath
-//   var response = await request.send();
-//   var newResponse = await http.Response.fromStream(response);
-//   // final responseData = json.decode(newResponse.body);
-//   print("Got reply");
-//   print(newResponse.body);
-//   print("\n\n\n\n\n\n\n\n");
-//   return newResponse.body;
-// }
 Future<List<String>> splitAudioIntoSegments(
     String audioFilePath, int segmentDurationInSeconds) async {
   final flutterFFmpeg = FlutterFFmpeg();
@@ -131,7 +102,7 @@ Future<String> convertSpeechToText(String filePath) async {
     var request = http.MultipartRequest('POST', url);
     request.headers.addAll({"Authorization": "Bearer $apiKey"});
     request.fields["model"] = 'whisper-1';
-    request.fields["language"] = "zh";
+    request.fields["language"] = "en";
     request.fields["response_format"] = "text";
     request.files.add(await http.MultipartFile.fromPath('file', segmentPath));
     var response = await request.send();
@@ -143,7 +114,7 @@ Future<String> convertSpeechToText(String filePath) async {
   // 串接結果
   final fullTranscription = transcriptions.join("");
 
-  print("Got reply");
+  print("Full transcription");
   print(fullTranscription);
   print("\n\n\n\n\n\n\n\n");
   return fullTranscription;

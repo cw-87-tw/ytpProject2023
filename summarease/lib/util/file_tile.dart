@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
 
 class FileTile extends StatelessWidget {
-  final String fileName;
-  final String fileTime;
+  final Map<String, dynamic> data;
+  final Function(String summmary, String script)? showSummary;
+
+  void onTap() {
+    showSummary!(data['summary'], data['script']);
+  }
+
   const FileTile({
     super.key,
-    required this.fileName,
-    required this.fileTime,
+    required this.data,
+    required this.showSummary,
   });
 
   @override
@@ -23,31 +28,30 @@ class FileTile extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Row(
+              const Icon(Icons.video_file, size: 30,),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Icon(Icons.video_file, size: 30,),
-                  SizedBox(width: 10,),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        fileName,
-                        style: Theme.of(context).textTheme.bodyLarge,
-                        //textoverflow does not work (might be cuz i lack "expanded"?)
-                        // softWrap: false,
-                        // maxLines: 1,
-                        // overflow: TextOverflow.ellipsis,
-                      ),
-                      Text(
-                        fileTime,
-                        style: Theme.of(context).textTheme.bodySmall,
-                        // softWrap: false,
-                        // maxLines: 1,
-                        // overflow: TextOverflow.ellipsis,
-                      )
-                    ],
+                  Text(
+                    data['name'],
+                    style: Theme.of(context).textTheme.bodyLarge,
+                    //textoverflow does not work (might be cuz i lack "expanded"?)
+                    // softWrap: false,
+                    // maxLines: 1,
+                    // overflow: TextOverflow.ellipsis,
                   ),
+                  Text(
+                    "${data['timestamp']} ${data['duration']}",
+                    style: Theme.of(context).textTheme.bodySmall,
+                    // softWrap: false,
+                    // maxLines: 1,
+                    // overflow: TextOverflow.ellipsis,
+                  )
                 ],
+              ),
+              GestureDetector(
+                onTap: onTap,
+                child: const Icon(Icons.remove_red_eye),
               ),
               Icon(Icons.download),
             ],
