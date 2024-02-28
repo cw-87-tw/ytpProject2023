@@ -102,10 +102,6 @@ class _NewFilePageState extends State<NewFilePage> {
           });
 
       await videosRef.putFile(file);
-      // print("---------- Successfully upload to Storage!!! ----------");
-      // print("---------- reference: $videosRef ----------");
-
-      // print("---------- userID: $userId ----------");
 
       Map<String, dynamic> userVideoData = {
         'path': videosRef.fullPath,
