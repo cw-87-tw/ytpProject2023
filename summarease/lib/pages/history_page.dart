@@ -14,6 +14,7 @@ class HistoryPage extends StatefulWidget {
 List<String> videoIDs = [];
 
 Future getVideoIDs() async {
+  videoIDs.clear();
   CollectionReference files = FirebaseFirestore.instance.collection('userFile');
   final userID = getCurrentUserId();
   await files
