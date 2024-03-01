@@ -5,7 +5,7 @@ class FileTile extends StatelessWidget {
   final Function(String summmary, String script)? showSummary;
 
   void onTap() {
-    showSummary!(data['summary'], data['script']);
+    showSummary!(data['summary'], data['conversation']);
   }
 
   const FileTile({
