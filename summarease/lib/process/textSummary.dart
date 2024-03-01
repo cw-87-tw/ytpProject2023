@@ -21,6 +21,7 @@ Future<String> summarizeText(String text) async {
         },
         {"role": "user", "content": text},
       ],
+      // "response_format": {"type": "json_object"}
     }),
   );
   print("GPT replied\n\n\n");
@@ -28,9 +29,9 @@ Future<String> summarizeText(String text) async {
   // return response.body;
   if (response.statusCode == 200) {
     final data = jsonDecode(response.body);
-    // final test = utf8.decode(data);
-    // print("test $test\n\n\n\n");
-    final summary = data['choices'][0]['message']['content'].toSdtring();
+    final rawData = data['choices'][0]['message']['content'].toString();
+    final summary = utf8.decode(rawData.runes.toList());
+    print("Summary $summary\n\n\n");
     return summary;
     // return respons;
   } else {
