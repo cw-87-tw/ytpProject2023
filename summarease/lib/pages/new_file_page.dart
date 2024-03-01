@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, use_build_context_synchronously, avoid_print
+
 import 'dart:io';
 import 'dart:async';
 import '../util/op_tile.dart';
@@ -67,7 +69,7 @@ class _NewFilePageState extends State<NewFilePage> {
                     Icons.warning_amber,
                     color: Colors.red.shade300,
                   ),
-                  Text(' Error: ' + msg,
+                  Text(' Error: $msg',
                       style:
                           TextStyle(color: Colors.red.shade300, fontSize: 20)),
                 ],
@@ -126,10 +128,6 @@ class _NewFilePageState extends State<NewFilePage> {
     }
   }
 
-  void uploadAudio() {
-    //
-  }
-
   void setEmailRecipient() {
     //
   }
@@ -156,12 +154,6 @@ class _NewFilePageState extends State<NewFilePage> {
                   opName: '上傳影片',
                   color: Theme.of(context).colorScheme.secondary,
                   onTap: uploadVideo,
-                ),
-                SizedBox(height: 30),
-                OpTile(
-                  opName: '上傳音檔',
-                  color: Theme.of(context).colorScheme.secondary,
-                  onTap: uploadAudio,
                 ),
                 SizedBox(height: 30),
                 OpTile(
