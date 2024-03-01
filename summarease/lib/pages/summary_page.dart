@@ -69,7 +69,7 @@ class _SummaryPageState extends State<SummaryPage> {
                 itemCount: messages.length,
                 itemBuilder: (context, index) {
                   return MsgTile(
-                    author: messages[index]["author"],
+                    author: messages[index]["role"],
                     content: messages[index]["content"],
                   );
                 },
@@ -83,7 +83,8 @@ class _SummaryPageState extends State<SummaryPage> {
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10.0),
                 ),
-                labelText: 'Ask ChatGPT something...'
+                labelText: 'Ask ChatGPT something...',
+                labelStyle: TextStyle(color: Colors.grey)
               ),
             ),
           )
