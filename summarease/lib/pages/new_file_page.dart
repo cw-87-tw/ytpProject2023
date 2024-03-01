@@ -157,6 +157,8 @@ class _NewFilePageState extends State<NewFilePage> {
 
     var transcription = await convertSpeechToText(file.path);
     var summary = await summarizeText(transcription);
+
+    // upload the `summary` here
     
     Navigator.pop(context);
 
