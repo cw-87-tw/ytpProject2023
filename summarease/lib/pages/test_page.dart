@@ -42,7 +42,7 @@ class _TestPageState extends State<TestPage> {
   }
 
   Future<void> summaryTest() async {
-    var res = await summarizeText("Hello, nice to meet you");
+    var res = await summarizeText("你好");
     setState(() {
         displayText = res;
     });

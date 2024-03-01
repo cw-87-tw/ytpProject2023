@@ -102,7 +102,7 @@ Future<String> convertSpeechToText(String filePath) async {
     var request = http.MultipartRequest('POST', url);
     request.headers.addAll({"Authorization": "Bearer $apiKey"});
     request.fields["model"] = 'whisper-1';
-    request.fields["language"] = "en";
+    request.fields["language"] = "zh";
     request.fields["response_format"] = "text";
     request.files.add(await http.MultipartFile.fromPath('file', segmentPath));
     var response = await request.send();
