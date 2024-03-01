@@ -2,6 +2,8 @@
 
 import 'dart:io';
 import 'dart:async';
+import '../process/videoToText.dart';
+import '../process/textSummary.dart';
 import '../util/op_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
@@ -18,12 +20,16 @@ class NewFilePage extends StatefulWidget {
 }
 
 class _NewFilePageState extends State<NewFilePage> {
+  String userId = getCurrentUserId();
+  late File file;
+
   void showSuccessUploadDialog() {
     showDialog(
+      barrierDismissible: false,
       context: context,
       builder: (context) {
         return AlertDialog(
-          backgroundColor: Color.fromARGB(255, 183, 246, 186),
+          backgroundColor: Color.fromARGB(255, 197, 253, 200),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10.0),
           ),
@@ -32,14 +38,10 @@ class _NewFilePageState extends State<NewFilePage> {
             child: Center(
               child: Row(
                 children: [
-                  Icon(
-                    Icons.warning_amber,
-                    color: Color.fromARGB(255, 136, 248, 187),
-                  ),
                   Text('Upload Successful',
-                    textAlign: TextAlign.left,
+                    textAlign: TextAlign.center,
                     style: TextStyle(
-                      fontWeight: FontWeight.bold,
+                      fontWeight: FontWeight.normal,
                       color: Color.fromARGB(255, 0, 0, 0),
                       fontSize: 24
                     )
@@ -53,13 +55,27 @@ class _NewFilePageState extends State<NewFilePage> {
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text('OK',
-                textAlign: TextAlign.right,
+              child: Text('Cancel',
+                textAlign: TextAlign.left,
+                style: TextStyle(
+                  fontWeight: FontWeight.normal,
+                  color: Color.fromARGB(255, 0, 0, 0),
+                  fontSize: 18
+                )
+              )
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+                summarizeFunction();
+              },
+              child: Text(
+                'Summarize Now',
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   color: Color.fromARGB(255, 0, 0, 0),
                   fontSize: 20
-                )
+                ),
               )
             )
           ],
@@ -68,33 +84,139 @@ class _NewFilePageState extends State<NewFilePage> {
     );
   }
 
+  void showUploadingDialog() {
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          content: StatefulBuilder(
+            builder: (BuildContext context, StateSetter setState) {
+              return Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  CircularProgressIndicator(),
+                  SizedBox(height: 16),
+                  Text(
+                    "Uploading...",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 18),
+                  ),
+                ],
+              );
+            },
+          ),
+        );
+      },
+    );
+  }
+
   void showErrorDialog(String msg) {
     showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            backgroundColor: Colors.red.shade100,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10.0),
-              // side: BorderSide(width: 2, color: Colors.red.shade300)
-            ),
-            title: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Center(
-                  child: Row(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          backgroundColor: Colors.red.shade100,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10.0),
+          ),
+          title: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Center(
+              child: Row(
                 children: [
                   Icon(
                     Icons.warning_amber,
                     color: Colors.red.shade300,
                   ),
-                  Text(' Error: $msg',
-                      style:
-                          TextStyle(color: Colors.red.shade300, fontSize: 20)),
+                  Text(
+                    ' Error: $msg',
+                    style: TextStyle(color: Colors.red.shade300, fontSize: 20)
+                  ),
                 ],
-              )),
+              )
             ),
-          );
-        });
+          ),
+        );
+      }
+    );
+  }
+
+  void summarizeFunction() async {
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          content: StatefulBuilder(
+            builder: (BuildContext context, StateSetter setState) {
+              return Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  CircularProgressIndicator(),
+                  SizedBox(height: 16),
+                  Text(
+                    "Summarizing...",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 18),
+                  ),
+                ],
+              );
+            },
+          ),
+        );
+      },
+    );
+
+    var transcription = await convertSpeechToText(file.path);
+    var summary = await summarizeText(transcription);
+    
+    Navigator.pop(context);
+
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          backgroundColor: Color.fromARGB(255, 197, 253, 200),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10.0),
+          ),
+          title: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Center(
+              child: Row(
+                children: [
+                  Text('Summarize Successful',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontWeight: FontWeight.normal,
+                      color: Color.fromARGB(255, 0, 0, 0),
+                      fontSize: 24
+                    )
+                  ),
+                ],
+              )
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('Cancel',
+                textAlign: TextAlign.right,
+                style: TextStyle(
+                  fontWeight: FontWeight.normal,
+                  color: Color.fromARGB(255, 0, 0, 0),
+                  fontSize: 18
+                )
+              )
+            ),
+          ],
+        );
+      }
+    );
   }
 
   Future<void> newVideoProject() async {
@@ -103,24 +225,17 @@ class _NewFilePageState extends State<NewFilePage> {
       allowedExtensions: ['mp4', 'avi', 'mkv', 'flv', 'mov'],
     );
 
-    String userId = getCurrentUserId();
-
     if (result != null) {
-      File file = File(result.files.single.path!);
+      // the dialog of uploading videos
+      showUploadingDialog();
+
+      // uploading file to `storage`
+      file = File(result.files.single.path!);
       final storageRef = FirebaseStorage.instance.ref();
 
       getVideoIDs();
       final videosRef =
           storageRef.child("$userId/videoFiles/video_#${videoIDs.length}");
-
-      showDialog(
-          context: context,
-          builder: (context) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          });
-
       await videosRef.putFile(file);
 
       // the field information of the video
@@ -128,16 +243,19 @@ class _NewFilePageState extends State<NewFilePage> {
         'path': videosRef.fullPath,
       };
 
+      // uploading file to `firestore`
       await FirebaseFirestore.instance
           .collection('userFile')
           .doc(userId)
           .collection('userVideos')
           .doc('video #${videoIDs.length}')
           .set(userVideoData)
-          .then((value) {
+          .then((value) async {
+        // pop out the uploading dialog
         Navigator.pop(context);
         showSuccessUploadDialog();
       }).catchError((e) {
+        // pop out the circle dialog
         Navigator.pop(context);
         showErrorDialog(e.code);
         print("---------- Failed to update reference :( ----------");
@@ -174,7 +292,7 @@ class _NewFilePageState extends State<NewFilePage> {
                   color: Theme.of(context).colorScheme.secondary,
                   onTap: newVideoProject,
                 ),
-                SizedBox(height: 30),
+                SizedBox(height: 20),
                 OpTile(
                   opName: '預設寄信對象',
                   color: Theme.of(context).colorScheme.secondary,
