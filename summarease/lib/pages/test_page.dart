@@ -35,17 +35,9 @@ class _TestPageState extends State<TestPage> {
       setState(() {
         displayText = summary;
       });
-    } 
-    else {
+    } else {
       print("No file selected");
     }
-  }
-
-  Future<void> summaryTest() async {
-    var res = await summarizeText("你好");
-    setState(() {
-        displayText = res;
-    });
   }
 
   @override
@@ -70,11 +62,6 @@ class _TestPageState extends State<TestPage> {
                   opName: '上傳影片',
                   color: Theme.of(context).colorScheme.secondary,
                   onTap: uploadVideo,
-                ),
-                OpTile(
-                  opName: 'test',
-                  color: Theme.of(context).colorScheme.secondary,
-                  onTap: summaryTest,
                 ),
                 Text(displayText)
               ],

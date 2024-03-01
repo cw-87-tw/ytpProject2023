@@ -20,34 +20,52 @@ class NewFilePage extends StatefulWidget {
 class _NewFilePageState extends State<NewFilePage> {
   void showSuccessUploadDialog() {
     showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            backgroundColor: Color.fromARGB(255, 183, 246, 186),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10.0),
-              // side: BorderSide(width: 2, color: Colors.red.shade300)
-            ),
-            title: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Center(
-                  child: Row(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          backgroundColor: Color.fromARGB(255, 183, 246, 186),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10.0),
+          ),
+          title: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Center(
+              child: Row(
                 children: [
                   Icon(
                     Icons.warning_amber,
                     color: Color.fromARGB(255, 136, 248, 187),
                   ),
                   Text('Upload Successful',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Color.fromARGB(255, 0, 0, 0),
-                          fontSize: 24)),
+                    textAlign: TextAlign.left,
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Color.fromARGB(255, 0, 0, 0),
+                      fontSize: 24
+                    )
+                  ),
                 ],
-              )),
+              )
             ),
-          );
-        });
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('OK',
+                textAlign: TextAlign.right,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Color.fromARGB(255, 0, 0, 0),
+                  fontSize: 20
+                )
+              )
+            )
+          ],
+        );
+      }
+    );
   }
 
   void showErrorDialog(String msg) {
@@ -79,7 +97,7 @@ class _NewFilePageState extends State<NewFilePage> {
         });
   }
 
-  Future<void> uploadVideo() async {
+  Future<void> newVideoProject() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(
       type: FileType.custom,
       allowedExtensions: ['mp4', 'avi', 'mkv', 'flv', 'mov'],
@@ -105,6 +123,7 @@ class _NewFilePageState extends State<NewFilePage> {
 
       await videosRef.putFile(file);
 
+      // the field information of the video
       Map<String, dynamic> userVideoData = {
         'path': videosRef.fullPath,
       };
@@ -151,9 +170,9 @@ class _NewFilePageState extends State<NewFilePage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 OpTile(
-                  opName: '上傳影片',
+                  opName: '新專案',
                   color: Theme.of(context).colorScheme.secondary,
-                  onTap: uploadVideo,
+                  onTap: newVideoProject,
                 ),
                 SizedBox(height: 30),
                 OpTile(
