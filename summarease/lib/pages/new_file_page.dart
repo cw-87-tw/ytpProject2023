@@ -53,26 +53,13 @@ class _NewFilePageState extends State<NewFilePage> {
           actions: <Widget>[
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text('Cancel',
-                textAlign: TextAlign.left,
-                style: TextStyle(
-                  fontWeight: FontWeight.normal,
-                  color: Color.fromARGB(255, 0, 0, 0),
-                  fontSize: 18
-                )
-              )
-            ),
-            TextButton(
-              onPressed: () {
                 Navigator.pop(context);
                 summarizeFunction();
               },
               child: Text(
                 'Summarize Now',
                 style: TextStyle(
-                  fontWeight: FontWeight.bold,
+                  fontWeight: FontWeight.normal,
                   color: Color.fromARGB(255, 0, 0, 0),
                   fontSize: 20
                 ),
@@ -204,7 +191,7 @@ class _NewFilePageState extends State<NewFilePage> {
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text('Cancel',
+              child: Text('Done',
                 textAlign: TextAlign.right,
                 style: TextStyle(
                   fontWeight: FontWeight.normal,
