@@ -305,7 +305,7 @@ class _NewFilePageState extends State<NewFilePage> {
   }
 
   void setEmailRecipient() {
-    showUploadingDialog();
+    // showUploadingDialog();
   }
 
   @override
