@@ -105,10 +105,22 @@ class _NewFilePageState extends State<NewFilePage> {
                   SizedBox(height: 14),
                   CircularProgressIndicator(),
                   SizedBox(height: 28),
-                  Text(
-                    "Uploading...",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 18),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      SizedBox(width: 35),
+                      Icon(
+                        Icons.radio_button_unchecked,
+                        color: Colors.grey,
+                        size: 24,
+                      ),
+                      SizedBox(width: 5),
+                      Text(
+                        "Uploading...",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(fontSize: 18),
+                      ),
+                    ],
                   ),
                 ],
               );
@@ -133,10 +145,40 @@ class _NewFilePageState extends State<NewFilePage> {
                   SizedBox(height: 14),
                   CircularProgressIndicator(),
                   SizedBox(height: 28),
-                  Text(
-                    "Summarizing...",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 18),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      SizedBox(width: 35),
+                      Icon(
+                        Icons.check_circle,
+                        color: Colors.lightGreen,
+                        size: 24,
+                      ),
+                      SizedBox(width: 5),
+                      Text(
+                        "Uploaded",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(fontSize: 18),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 14),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      SizedBox(width: 35),
+                      Icon(
+                        Icons.radio_button_unchecked,
+                        color: Colors.grey,
+                        size: 24,
+                      ),
+                      SizedBox(width: 5),
+                      Text(
+                        "Summarizing...",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(fontSize: 18),
+                      ),
+                    ],
                   ),
                 ],
               );
@@ -292,7 +334,7 @@ class _NewFilePageState extends State<NewFilePage> {
           .then((value) async {
         // pop out the uploading dialog
         Navigator.pop(context);
-        showSuccessUploadDialog();
+        summarizeFunction();
       }).catchError((e) {
         // pop out the circle dialog
         Navigator.pop(context);
@@ -305,7 +347,7 @@ class _NewFilePageState extends State<NewFilePage> {
   }
 
   void setEmailRecipient() {
-    // showUploadingDialog();
+    showUploadingDialog();
   }
 
   @override
