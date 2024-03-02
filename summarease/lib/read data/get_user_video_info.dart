@@ -6,7 +6,7 @@ class GetUserVideoInfo extends StatelessWidget {
   final String videoID;
   CollectionReference files;
   final String userID;
-  final Function(String summary, String script)? showSummary;
+  final Function(Map<String, dynamic>)? showSummary;
 
   GetUserVideoInfo({
     required this.videoID,
@@ -24,11 +24,11 @@ class GetUserVideoInfo extends StatelessWidget {
           if (snapshot.connectionState == ConnectionState.done) {
             Map<String, dynamic> data =
             snapshot.data!.data() as Map<String, dynamic>;
-            return FileTile(data: data, showSummary: showSummary);
+            return FileTile(data: data, showSummary: showSummary,);
           }
           return FileTile(
             data: const {"name" : "Loading ...", "timestamp" : "Loading", "duration" : "..."}, 
-            showSummary: (s1, s2) {},
+            showSummary: (_) {},
           );
         }
     );
