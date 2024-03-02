@@ -38,30 +38,50 @@ class _NewFilePageState extends State<NewFilePage> {
             child: Center(
               child: Row(
                 children: [
-                  Text('Upload Successful',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontWeight: FontWeight.normal,
-                      color: Color.fromARGB(255, 0, 0, 0),
-                      fontSize: 24
-                    )
+                  SizedBox(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.check_circle,
+                          color: Colors.green,
+                          size: 36,
+                        ),
+                        SizedBox(width: 16),
+                        Text('Upload Successful',
+                          textAlign: TextAlign.left,
+                          style: TextStyle(
+                            fontWeight: FontWeight.normal,
+                            color: Colors.black87,
+                            fontSize: 20
+                          )
+                        ),
+                      ],
+                    ),
                   ),
+                  SizedBox(height: 16),
                 ],
               )
             ),
           ),
           actions: <Widget>[
-            TextButton(
-              onPressed: () {
+            InkWell(
+              onTap: () {
                 Navigator.pop(context);
                 summarizeFunction();
               },
-              child: Text(
-                'Summarize Now',
-                style: TextStyle(
-                  fontWeight: FontWeight.normal,
-                  color: Color.fromARGB(255, 0, 0, 0),
-                  fontSize: 20
+              child: Container(
+                padding: EdgeInsets.all(8.0),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.secondary,
+                ),
+                child: Text(
+                  ' Summarize Now ',
+                  style: TextStyle(
+                    fontWeight: FontWeight.normal,
+                    color: Colors.black87,
+                    fontSize: 16,
+                  ),
                 ),
               )
             )
@@ -82,10 +102,39 @@ class _NewFilePageState extends State<NewFilePage> {
               return Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
+                  SizedBox(height: 14),
                   CircularProgressIndicator(),
-                  SizedBox(height: 16),
+                  SizedBox(height: 28),
                   Text(
                     "Uploading...",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 18),
+                  ),
+                ],
+              );
+            },
+          ),
+        );
+      },
+    );
+  }
+
+  void showSummarizingDialog() {
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          content: StatefulBuilder(
+            builder: (BuildContext context, StateSetter setState) {
+              return Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  SizedBox(height: 14),
+                  CircularProgressIndicator(),
+                  SizedBox(height: 28),
+                  Text(
+                    "Summarizing...",
                     textAlign: TextAlign.center,
                     style: TextStyle(fontSize: 18),
                   ),
@@ -129,39 +178,7 @@ class _NewFilePageState extends State<NewFilePage> {
     );
   }
 
-  void summarizeFunction() async {
-    showDialog(
-      barrierDismissible: false,
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          content: StatefulBuilder(
-            builder: (BuildContext context, StateSetter setState) {
-              return Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  CircularProgressIndicator(),
-                  SizedBox(height: 16),
-                  Text(
-                    "Summarizing...",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 18),
-                  ),
-                ],
-              );
-            },
-          ),
-        );
-      },
-    );
-
-    var transcription = await convertSpeechToText(file.path);
-    var summary = await summarizeText(transcription);
-
-    // upload the `summary` here
-    
-    Navigator.pop(context);
-
+  void showSuccessSummarizeDialog() {
     showDialog(
       barrierDismissible: false,
       context: context,
@@ -176,36 +193,69 @@ class _NewFilePageState extends State<NewFilePage> {
             child: Center(
               child: Row(
                 children: [
-                  Text('Summarize Successful',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontWeight: FontWeight.normal,
-                      color: Color.fromARGB(255, 0, 0, 0),
-                      fontSize: 24
-                    )
+                  SizedBox(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.check_circle,
+                          color: Colors.green,
+                          size: 36,
+                        ),
+                        SizedBox(width: 16),
+                        Text('Summarize Successful',
+                          textAlign: TextAlign.left,
+                          style: TextStyle(
+                            fontWeight: FontWeight.normal,
+                            color: Colors.black87,
+                            fontSize: 20
+                          )
+                        ),
+                      ],
+                    ),
                   ),
+                  SizedBox(height: 16),
                 ],
               )
             ),
           ),
           actions: <Widget>[
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
+            InkWell(
+              onTap: () {
+                Navigator.pop(context);
               },
-              child: Text('Done',
-                textAlign: TextAlign.right,
-                style: TextStyle(
-                  fontWeight: FontWeight.normal,
-                  color: Color.fromARGB(255, 0, 0, 0),
-                  fontSize: 18
-                )
+              child: Container(
+                padding: EdgeInsets.all(8.0),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.secondary,
+                ),
+                child: Text(
+                  ' Done ',
+                  style: TextStyle(
+                    fontWeight: FontWeight.normal,
+                    color: Colors.black87,
+                    fontSize: 16,
+                  ),
+                ),
               )
-            ),
+            )
           ],
         );
       }
     );
+  }
+
+  void summarizeFunction() async {
+    showSummarizingDialog();
+
+    var transcription = await convertSpeechToText(file.path);
+    var summary = await summarizeText(transcription);
+
+    // upload the `summary` here
+    
+    Navigator.pop(context);
+
+    showSuccessSummarizeDialog();
   }
 
   Future<void> newVideoProject() async {
@@ -255,7 +305,7 @@ class _NewFilePageState extends State<NewFilePage> {
   }
 
   void setEmailRecipient() {
-    //
+    showUploadingDialog();
   }
 
   @override
