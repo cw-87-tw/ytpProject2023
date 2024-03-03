@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:convert';
-<<<<<<< HEAD
 
 import 'package:summarease/read_data/get_current_user_id.dart';
-=======
->>>>>>> 0b658042c5df0656b5d29e65fbd60431918d426c
 import 'package:summarease/util/msg_tile.dart';
 
 class SummaryPage extends StatefulWidget {
