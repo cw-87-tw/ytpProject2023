@@ -1,5 +1,8 @@
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:summarease/pages/forgot_password_page.dart';
 import 'package:summarease/util/login_textfield.dart';
 import 'package:summarease/util/op_tile.dart';
 
@@ -127,17 +130,30 @@ class _LoginPageState extends State<LoginPage> {
                     hintText: '密碼',
                     obscureText: true,
                 ),
+                SizedBox(height: 10),
                 Padding(
-                  padding: const EdgeInsets.all(10.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 25.0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      Text(
-                        '忘記密碼?',
-                        style: TextStyle(
-                          color: Colors.grey,
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(context, 
+                            MaterialPageRoute(
+                              builder: (context) {
+                              return ForgotPasswordPage();
+                              },
+                            ),
+                          );
+                        },
+                        child: Text(
+                          '忘記密碼?',
+                          style: TextStyle(
+                            color: Theme.of(context).colorScheme.outline,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                      ),
+                      )
                     ],
                   ),
                 ),

@@ -50,10 +50,12 @@ class _RegisterPageState extends State<RegisterPage> {
             .collection('users')
             .doc(userId)
             .set(userRegisterData)
-            .then(
-                (value) => print("---------- added users document ----------"))
-            .catchError((error) =>
-                print("---------- failed adding users document ----------"));
+            .then((value) {
+              print("---------- added users document ----------");
+            })
+            .catchError((error) {
+              print("---------- failed adding users document ----------");
+            });
 
         Navigator.pop(context);
       } else {
