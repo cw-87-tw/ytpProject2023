@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:summarease/pages/summary_page.dart';
-import 'package:summarease/read%20data/get_user_video_info.dart';
-import '../util/get_current_user_info.dart';
+import 'package:summarease/read_data/get_user_video_info.dart';
+import '../read_data/get_current_user_id.dart';
 
 class HistoryPage extends StatefulWidget {
   const HistoryPage({super.key});

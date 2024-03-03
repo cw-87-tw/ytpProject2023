@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert';
 
-import 'package:summarease/util/get_current_user_info.dart';
+import 'package:summarease/read_data/get_current_user_id.dart';
 import 'package:summarease/util/msg_tile.dart';
 
 class SummaryPage extends StatefulWidget {
