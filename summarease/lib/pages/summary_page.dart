@@ -1,18 +1,18 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert';
+<<<<<<< HEAD
 
 import 'package:summarease/read_data/get_current_user_id.dart';
+=======
+>>>>>>> 0b658042c5df0656b5d29e65fbd60431918d426c
 import 'package:summarease/util/msg_tile.dart';
 
 class SummaryPage extends StatefulWidget {
-  final String summary;
-  final String conversation;
-  final Function(String summary, String conversation)? toggleSummary;
+  final Map<String, dynamic> data;
+  final Function(Map<String, dynamic>)? toggleSummary;
   SummaryPage({
     super.key,
-    required this.summary,
-    required this.conversation,
+    required this.data,
     required this.toggleSummary,
   });
 
@@ -30,13 +30,13 @@ class _SummaryPageState extends State<SummaryPage> {
   List messages = [];
 
   void get_conversation() async {
-    var jsonData = jsonDecode(widget.conversation);
+    var jsonData = jsonDecode(widget.data['conversation']);
     // {"messages": [{"author": "ChatGPT", "content": "hi"}, {"author": "user", "content": "bye"}]}
     messages = jsonData["messages"];
   }
 
   void hideSummary() {
-    widget.toggleSummary!("", "");
+    widget.toggleSummary!({});
   }
 
   @override

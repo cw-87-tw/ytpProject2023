@@ -34,14 +34,12 @@ class _HistoryPageState extends State<HistoryPage> {
   }
 
   bool showingSummary = false;
-  String _summary = "";
-  String _conversation= "";
+  Map<String, dynamic> _data = {};
   
-  void toggleSummary(String summary, String conversation) {
+  void toggleSummary(Map<String, dynamic> data) {
     setState(() {
       showingSummary = !showingSummary;
-      _summary = summary;
-      _conversation = conversation;
+      _data = data;
     });
   }
 
@@ -67,7 +65,7 @@ class _HistoryPageState extends State<HistoryPage> {
             future: getVideoIDs(),
             builder: (context, snapshot) {
               if (showingSummary) {
-                return SummaryPage(summary: _summary, conversation: _conversation, toggleSummary: toggleSummary,);
+                return SummaryPage(data: _data, toggleSummary: toggleSummary,);
               }
               else {
                 return ListView.builder(

@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 
 class FileTile extends StatelessWidget {
   final Map<String, dynamic> data;
-  final Function(String summmary, String script)? showSummary;
+  final Function(Map<String, dynamic>)? showSummary;
 
   void onTap() {
-    showSummary!(data['summary'], data['conversation']);
+    showSummary!(data);
   }
 
   const FileTile({
@@ -41,7 +41,7 @@ class FileTile extends StatelessWidget {
                     // overflow: TextOverflow.ellipsis,
                   ),
                   Text(
-                    "${data['timestamp']} ${data['duration']}",
+                    data['duration'],
                     style: Theme.of(context).textTheme.bodySmall,
                     // softWrap: false,
                     // maxLines: 1,
