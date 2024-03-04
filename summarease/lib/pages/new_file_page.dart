@@ -10,7 +10,6 @@ import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:summarease/read_data/get_current_user_id.dart';
-import 'package:summarease/pages/history_page.dart';
 
 class NewFilePage extends StatefulWidget {
   const NewFilePage({super.key});
