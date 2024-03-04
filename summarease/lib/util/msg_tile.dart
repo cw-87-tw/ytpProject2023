@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 class MsgTile extends StatelessWidget {
-  final String author;
+  final String role;
   final String content;
-  const MsgTile({required this.author, required this.content, super.key});
+  const MsgTile({required this.role, required this.content, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +14,7 @@ class MsgTile extends StatelessWidget {
           Row(
             children: [
               Icon(Icons.account_circle),
-              Text(author),
+              Text(role),
             ],
           ),
           Text(

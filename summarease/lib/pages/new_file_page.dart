@@ -10,7 +10,6 @@ import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:summarease/util/get_current_user_info.dart';
-import 'package:summarease/pages/history_page.dart';
 
 class NewFilePage extends StatefulWidget {
   const NewFilePage({super.key});
@@ -314,7 +313,12 @@ class _NewFilePageState extends State<NewFilePage> {
       file = File(result.files.single.path!);
       final storageRef = FirebaseStorage.instance.ref();
 
-      getVideoIDs();
+
+      //威廉改這裡!!!!!!!!!!!!!!!!!!!
+      // getVideoIDs();
+      List videoIDs = [];
+      //威廉改這裡!!!!!!!!!!!!!!!!!!!
+
       final videosRef =
           storageRef.child("$userId/videoFiles/video_#${videoIDs.length}");
       await videosRef.putFile(file);

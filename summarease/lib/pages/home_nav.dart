@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
-
+import 'package:summarease/pages/history_page_2.dart';
 import 'account_page.dart';
-import 'history_page.dart';
 import 'new_file_page.dart';
 import 'test_page.dart';
 
@@ -17,10 +16,9 @@ class _HomeState extends State<Home> {
 
   int curInd = 1;
   final List<Widget> pages = [
-    const HistoryPage(),
+    HistoryPage2(),
     const NewFilePage(),
     AccountPage(),
-    TestPage(),
   ];
 
   void navigateBottomBar(int ind) {
@@ -66,10 +64,6 @@ class _HomeState extends State<Home> {
               GButton(
                 icon: Icons.person,
                 text: '個人帳號',
-              ),
-              GButton(
-                icon: Icons.pan_tool_alt_sharp,
-                text: '測試專區',
               ),
             ],
           ),
