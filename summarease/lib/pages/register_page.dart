@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:summarease/util/login_textfield.dart';
 import 'package:summarease/util/op_tile.dart';
-import 'package:summarease/util/get_current_user_info.dart';
+import 'package:summarease/read_data/get_current_user_id.dart';
 
 class RegisterPage extends StatefulWidget {
   final Function()? onTap;
@@ -50,10 +50,12 @@ class _RegisterPageState extends State<RegisterPage> {
             .collection('users')
             .doc(userId)
             .set(userRegisterData)
-            .then(
-                (value) => print("---------- added users document ----------"))
-            .catchError((error) =>
-                print("---------- failed adding users document ----------"));
+            .then((value) {
+              print("---------- added users document ----------");
+            })
+            .catchError((error) {
+              print("---------- failed adding users document ----------");
+            });
 
         Navigator.pop(context);
       } else {

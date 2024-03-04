@@ -9,7 +9,8 @@ import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:summarease/util/get_current_user_info.dart';
+import 'package:summarease/read_data/get_current_user_id.dart';
+import 'package:summarease/pages/history_page.dart';
 
 class NewFilePage extends StatefulWidget {
   const NewFilePage({super.key});
@@ -21,74 +22,6 @@ class NewFilePage extends StatefulWidget {
 class _NewFilePageState extends State<NewFilePage> {
   String userId = getCurrentUserId();
   late File file;
-
-  void showSuccessUploadDialog() {
-    showDialog(
-      barrierDismissible: false,
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          backgroundColor: Color.fromARGB(255, 197, 253, 200),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10.0),
-          ),
-          title: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Center(
-              child: Row(
-                children: [
-                  SizedBox(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.check_circle,
-                          color: Colors.green,
-                          size: 36,
-                        ),
-                        SizedBox(width: 16),
-                        Text('Upload Successful',
-                          textAlign: TextAlign.left,
-                          style: TextStyle(
-                            fontWeight: FontWeight.normal,
-                            color: Colors.black87,
-                            fontSize: 20
-                          )
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(height: 16),
-                ],
-              )
-            ),
-          ),
-          actions: <Widget>[
-            InkWell(
-              onTap: () {
-                Navigator.pop(context);
-                summarizeFunction();
-              },
-              child: Container(
-                padding: EdgeInsets.all(8.0),
-                decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.secondary,
-                ),
-                child: Text(
-                  ' Summarize Now ',
-                  style: TextStyle(
-                    fontWeight: FontWeight.normal,
-                    color: Colors.black87,
-                    fontSize: 16,
-                  ),
-                ),
-              )
-            )
-          ],
-        );
-      }
-    );
-  }
 
   void showUploadingDialog() {
     showDialog(
@@ -188,37 +121,6 @@ class _NewFilePageState extends State<NewFilePage> {
     );
   }
 
-  void showErrorDialog(String msg) {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          backgroundColor: Colors.red.shade100,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10.0),
-          ),
-          title: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Center(
-              child: Row(
-                children: [
-                  Icon(
-                    Icons.warning_amber,
-                    color: Colors.red.shade300,
-                  ),
-                  Text(
-                    ' Error: $msg',
-                    style: TextStyle(color: Colors.red.shade300, fontSize: 20)
-                  ),
-                ],
-              )
-            ),
-          ),
-        );
-      }
-    );
-  }
-
   void showSuccessSummarizeDialog() {
     showDialog(
       barrierDismissible: false,
@@ -286,17 +188,65 @@ class _NewFilePageState extends State<NewFilePage> {
     );
   }
 
-  void summarizeFunction() async {
+  void summarizeFunction(int videoNumber) async {
     showSummarizingDialog();
 
     var transcription = await convertSpeechToText(file.path);
     var summary = await summarizeText(transcription);
 
     // upload the `summary` here
-    
-    Navigator.pop(context);
+    Map<String, dynamic> userVideoData = {
+      'transcription': transcription,
+      'summary': summary,
+    };
 
-    showSuccessSummarizeDialog();
+    await FirebaseFirestore.instance
+        .collection('userFile')
+        .doc(userId)
+        .collection('userVideos')
+        .doc('video #$videoNumber')
+        .set(userVideoData)
+        .then((value) async {
+      // pop out the summarizing dialog
+      Navigator.pop(context);
+      showSuccessSummarizeDialog();
+    }).catchError((e) {
+      // pop out the circle dialog
+      Navigator.pop(context);
+      showErrorDialog(e.code);
+      print("---------- Failed to update reference :( ----------");
+    });
+  }
+
+  void showErrorDialog(String msg) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          backgroundColor: Colors.red.shade100,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10.0),
+          ),
+          title: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Center(
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.warning_amber,
+                    color: Colors.red.shade300,
+                  ),
+                  Text(
+                    ' Error: $msg',
+                    style: TextStyle(color: Colors.red.shade300, fontSize: 20)
+                  ),
+                ],
+              )
+            ),
+          ),
+        );
+      }
+    );
   }
 
   Future<void> newVideoProject() async {
@@ -319,8 +269,10 @@ class _NewFilePageState extends State<NewFilePage> {
       List videoIDs = [];
       //威廉改這裡!!!!!!!!!!!!!!!!!!!
 
+      getVideoIDs();
+      int videoNumber = videoIDs.length;
       final videosRef =
-          storageRef.child("$userId/videoFiles/video_#${videoIDs.length}");
+          storageRef.child("$userId/videoFiles/video_#$videoNumber");
       await videosRef.putFile(file);
 
       // the field information of the video
@@ -338,7 +290,7 @@ class _NewFilePageState extends State<NewFilePage> {
           .then((value) async {
         // pop out the uploading dialog
         Navigator.pop(context);
-        summarizeFunction();
+        summarizeFunction(videoNumber);
       }).catchError((e) {
         // pop out the circle dialog
         Navigator.pop(context);
