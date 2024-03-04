@@ -268,8 +268,6 @@ class _NewFilePageState extends State<NewFilePage> {
       // getVideoIDs();
       List videoIDs = [];
       //威廉改這裡!!!!!!!!!!!!!!!!!!!
-
-      getVideoIDs();
       int videoNumber = videoIDs.length;
       final videosRef =
           storageRef.child("$userId/videoFiles/video_#$videoNumber");
