@@ -2,7 +2,8 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'assets.dart';
 
-Future<String> callAPI(List<Map<String, String>> msgs) async {
+// return the latest response
+Future<String> callAPI(List<Map<String, String>> msgs) async { 
   final apiUrl = 'https://api.openai.com/v1/chat/completions';
 
   final response = await http.post(
@@ -42,5 +43,19 @@ Future<String> summarizeText(String text) async {
     },
     {"role": "user", "content": text},
   ];
+  return callAPI(msgs);
+  
+}
+
+Future<String> sendAPIMessage(List<Map<String, String>> chatMsgs, String summary) {
+  List<Map<String, String>> msgs = [
+    {
+      "role": "system",
+      "content":
+          "You are a helpful assistant. You need to summarize the text given by the user. But you can only answer all questions in English."
+    },
+    {"role": "user", "content": summary},
+  ];
+  msgs.addAll(chatMsgs);
   return callAPI(msgs);
 }
