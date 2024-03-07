@@ -2,20 +2,31 @@ import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:summarease/process/textSummary.dart';
 import 'package:summarease/util/msg_tile.dart';
 import 'package:summarease/util/send_button.dart';
 import '../read_data/conversation.dart';
 
-class SummaryPage2 extends StatelessWidget {
+class SummaryPage extends StatefulWidget {
 
   final videoIndex;
+
+  SummaryPage({required this.videoIndex, super.key});
+
+  @override
+  State<SummaryPage> createState() => _SummaryPageState();
+}
+
+class _SummaryPageState extends State<SummaryPage> {
   Conversation conversation = Conversation();
+
   User? user = FirebaseAuth.instance.currentUser;
+
   late List msgs;
-  
+
   final msg_controller = TextEditingController();
 
-  SummaryPage2({required this.videoIndex, super.key});
+
 
   @override
   Widget build(BuildContext context) {
@@ -25,20 +36,18 @@ class SummaryPage2 extends StatelessWidget {
         children: [
           //show conversation
           StreamBuilder(
-            stream: conversation.getConversation(videoIndex), 
+            stream: conversation.getConversation(widget.videoIndex), 
             builder: (context, snapshot) {
 
               //if error
               if (snapshot.hasError) {
-                return Center(child: Text('Something went wrong'));
+                return Center(child: Text("Something went wrong"));
               }
 
               //show loading circle
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return Center(child: CircularProgressIndicator());
               }
-                
-              print(snapshot.toString());
 
               //get conversation
               var jsonData = jsonDecode(snapshot.data!['conversation']);
@@ -49,7 +58,7 @@ class SummaryPage2 extends StatelessWidget {
                 return Center(
                   child: Padding(
                     padding: EdgeInsets.all(25),
-                    child: Text("沒有對話內容"),
+                    child: Text("沒有對話紀錄"),
                   ),
                 );
               }
@@ -70,7 +79,7 @@ class SummaryPage2 extends StatelessWidget {
             }
           ),
 
-          //textfield
+          //textfield & send button
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 25.0),
             child: Row(
@@ -91,18 +100,20 @@ class SummaryPage2 extends StatelessWidget {
                   ),
                 ),
                 SendButton(
-                  onTap: () {
+                  onTap: () async {
                     //if empty
                     if (msg_controller.text.isEmpty) return;
             
                     //add user msg to list
-                    msgs.add({"user" : msg_controller.text});
+                    msgs.add({"role" : "user", "content" : msg_controller.text});
                     msg_controller.clear();
 
-                    //call chatgpt (+add chatgpt msg to list)
+                    //call chatgpt
+                    String aiMsg = await sendAPIMessage(msgs, "");
+                    msgs.add({"role" : "system", "content" : aiMsg});
 
                     //update conversation
-                    conversation.updateConversation(msgs, videoIndex);
+                    conversation.updateConversation(msgs, widget.videoIndex);
 
                   }
                 ),

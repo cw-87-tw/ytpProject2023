@@ -1,11 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:summarease/pages/sumary_page_2.dart';
+import 'package:summarease/pages/summary_page.dart';
 import 'package:summarease/util/file_tile_2.dart';
 
-class HistoryPage2 extends StatefulWidget {
-  HistoryPage2({super.key});
+class HistoryPage extends StatefulWidget {
+  HistoryPage({super.key});
 
   User? user = FirebaseAuth.instance.currentUser;
 
@@ -19,10 +19,10 @@ class HistoryPage2 extends StatefulWidget {
   }
 
   @override
-  State<HistoryPage2> createState() => _HistoryPage2State();
+  State<HistoryPage> createState() => _HistoryPageState();
 }
 
-class _HistoryPage2State extends State<HistoryPage2> {
+class _HistoryPageState extends State<HistoryPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -54,6 +54,7 @@ class _HistoryPage2State extends State<HistoryPage2> {
 
           //get all user videos
           List videos = snapshot.data!.docs;
+          print(snapshot.data!.docs);
 
           //if no videos
           if (snapshot.data == null || videos.isEmpty) {
@@ -77,8 +78,7 @@ class _HistoryPage2State extends State<HistoryPage2> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => 
-                        SummaryPage2(videoIndex: index)
+                        builder: (context) => SummaryPage(videoIndex: index)
                       )
                     );
                   },

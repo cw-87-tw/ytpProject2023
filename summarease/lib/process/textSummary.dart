@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'assets.dart';
 
 // return the latest response
-Future<String> callAPI(List<Map<String, String>> msgs) async { 
+Future<String> callAPI(List msgs) async { 
   final apiUrl = 'https://api.openai.com/v1/chat/completions';
 
   final response = await http.post(
@@ -35,7 +35,7 @@ Future<String> callAPI(List<Map<String, String>> msgs) async {
 }
 
 Future<String> summarizeText(String text) async {
-  List<Map<String, String>> msgs = [
+  List msgs = [
     {
       "role": "system",
       "content":
@@ -47,8 +47,8 @@ Future<String> summarizeText(String text) async {
   
 }
 
-Future<String> sendAPIMessage(List<Map<String, String>> chatMsgs, String summary) {
-  List<Map<String, String>> msgs = [
+Future<String> sendAPIMessage(List chatMsgs, String summary) async {
+  List msgs = [
     {
       "role": "system",
       "content":
@@ -57,5 +57,5 @@ Future<String> sendAPIMessage(List<Map<String, String>> chatMsgs, String summary
     {"role": "user", "content": summary},
   ];
   msgs.addAll(chatMsgs);
-  return callAPI(msgs);
+  return await callAPI(msgs);
 }
