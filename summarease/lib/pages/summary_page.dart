@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -31,6 +32,7 @@ class _SummaryPageState extends State<SummaryPage> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) => scrollToBottom());
   }
 
   @override
@@ -99,9 +101,23 @@ class _SummaryPageState extends State<SummaryPage> {
             }
           ),
 
+          //page down button
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                FloatingActionButton(
+                  child: Icon(Icons.arrow_downward),
+                  onPressed: scrollToBottom
+                ),
+              ],
+            ),
+          ),
+
           //textfield & send button
           Padding(
-            padding: const EdgeInsets.symmetric(vertical: 25.0),
+            padding: const EdgeInsets.only(top: 10.0, bottom: 25.0),
             child: Row(
               children: [
                 Expanded(
