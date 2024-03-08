@@ -39,7 +39,7 @@ Future<String> summarizeText(String text) async {
     {
       "role": "system",
       "content":
-          "You are a helpful assistant. You need to summarize the text given by the user."
+          "You are a helpful assistant. You need to summarize the text given by the user. If you want to answer in Chinese, please answer in Traditional Chinese"
     },
     {"role": "user", "content": text},
   ];
@@ -52,7 +52,7 @@ Future<String> sendAPIMessage(List chatMsgs, String summary) async {
     {
       "role": "system",
       "content":
-          "You are a helpful assistant. You need to summarize the text given by the user."
+          "You are a helpful assistant. You need to summarize the text given by the user. If you want to answer in Chinese, please answer in Traditional Chinese"
     },
     {"role": "user", "content": summary},
   ];
