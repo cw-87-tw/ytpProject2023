@@ -19,6 +19,7 @@ class SummaryPage extends StatefulWidget {
 }
 
 class _SummaryPageState extends State<SummaryPage> {
+  
   Conversation conversation = Conversation();
 
   User? user = FirebaseAuth.instance.currentUser;

@@ -265,11 +265,16 @@ class _NewFilePageState extends State<NewFilePage> {
       final storageRef = FirebaseStorage.instance.ref();
 
 
-      //威廉改這裡!!!!!!!!!!!!!!!!!!!
-      // getVideoIDs();
       List videoIDs = [];
-      //威廉改這裡!!!!!!!!!!!!!!!!!!!
-      int videoNumber = videoIDs.length;
+      int videoNumber = 0;
+
+      // get video numbers
+      await FirebaseFirestore.instance
+        .collection('userFile').doc(userId)
+        .collection('userVideos').count().get().then(
+          (res) => videoNumber = res.count!
+        );
+
       final videosRef =
           storageRef.child("$userId/videoFiles/video_#$videoNumber");
       await videosRef.putFile(file);
