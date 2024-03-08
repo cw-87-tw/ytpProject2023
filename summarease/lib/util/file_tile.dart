@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
-class FileTile2 extends StatelessWidget {
+class FileTile extends StatelessWidget {
   
   final data;
   Function()? onTapConversation;
 
-  FileTile2({required this.data, required this.onTapConversation, super.key});
+  FileTile({required this.data, required this.onTapConversation, super.key});
 
   @override
   Widget build(BuildContext context) {

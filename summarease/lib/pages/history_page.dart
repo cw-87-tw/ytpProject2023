@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:summarease/pages/summary_page.dart';
-import 'package:summarease/util/file_tile_2.dart';
+import 'package:summarease/util/file_tile.dart';
 
 class HistoryPage extends StatefulWidget {
   HistoryPage({super.key});
@@ -54,7 +54,6 @@ class _HistoryPageState extends State<HistoryPage> {
 
           //get all user videos
           List videos = snapshot.data!.docs;
-          print(snapshot.data!.docs);
 
           //if no videos
           if (snapshot.data == null || videos.isEmpty) {
@@ -72,7 +71,7 @@ class _HistoryPageState extends State<HistoryPage> {
               shrinkWrap: true,
               itemCount: videos.length,
               itemBuilder: (context, index) {
-                return FileTile2(
+                return FileTile(
                   data: videos[index],
                   onTapConversation: () {
                     Navigator.push(

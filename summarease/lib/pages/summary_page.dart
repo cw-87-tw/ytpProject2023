@@ -26,7 +26,26 @@ class _SummaryPageState extends State<SummaryPage> {
 
   final msg_controller = TextEditingController();
 
+  final ScrollController scroll_controller = ScrollController();
 
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    scroll_controller.dispose();
+    super.dispose();
+  }
+
+  void scrollToBottom() {
+    scroll_controller.animateTo(
+      scroll_controller.position.maxScrollExtent,
+      duration: Duration(milliseconds: 300), 
+      curve: Curves.easeOut
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -66,6 +85,7 @@ class _SummaryPageState extends State<SummaryPage> {
               //show msgs as list
               return Expanded(
                 child: ListView.builder(
+                  controller: scroll_controller,
                   shrinkWrap: true,
                   itemCount: msgs.length,
                   itemBuilder: (context, index) {
@@ -113,7 +133,10 @@ class _SummaryPageState extends State<SummaryPage> {
                     msgs.add({"role" : "system", "content" : aiMsg});
 
                     //update conversation
-                    conversation.updateConversation(msgs, widget.videoIndex);
+                    await conversation.updateConversation(msgs, widget.videoIndex);
+
+                    //auto scroll
+                    scrollToBottom();
 
                   }
                 ),

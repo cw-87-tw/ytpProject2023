@@ -43,7 +43,7 @@ Future<String> summarizeText(String text) async {
     },
     {"role": "user", "content": text},
   ];
-  return callAPI(msgs);
+  return await callAPI(msgs);
   
 }
 
