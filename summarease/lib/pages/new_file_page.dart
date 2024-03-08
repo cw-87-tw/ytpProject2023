@@ -195,8 +195,10 @@ class _NewFilePageState extends State<NewFilePage> {
 
     // upload the `summary` here
     Map<String, dynamic> userVideoData = {
-      'transcription': transcription,
+      'script': transcription,
       'summary': summary,
+      'timestamp' : Timestamp.now(),
+      'name' : 'video_$videoNumber',
     };
 
     await FirebaseFirestore.instance
@@ -204,7 +206,7 @@ class _NewFilePageState extends State<NewFilePage> {
         .doc(userId)
         .collection('userVideos')
         .doc('video #$videoNumber')
-        .set(userVideoData)
+        .update(userVideoData)
         .then((value) async {
       // pop out the summarizing dialog
       Navigator.pop(context);

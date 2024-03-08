@@ -34,7 +34,7 @@ class FileTile extends StatelessWidget {
                     // overflow: TextOverflow.ellipsis,
                   ),
                   Text(
-                    data['duration'],
+                    data['timestamp'].toString(),
                     style: Theme.of(context).textTheme.bodySmall,
                     // softWrap: false,
                     // maxLines: 1,
