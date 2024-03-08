@@ -39,7 +39,7 @@ Future<String> summarizeText(String text) async {
     {
       "role": "system",
       "content":
-          "You are a helpful assistant. You need to summarize the text given by the user. But you can only answer all questions in English."
+          "You are a helpful assistant. You need to summarize the text given by the user."
     },
     {"role": "user", "content": text},
   ];
