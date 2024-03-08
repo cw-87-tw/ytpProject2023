@@ -22,25 +22,13 @@ class FileTile extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               const Icon(Icons.video_file, size: 30,),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    data['name'],
-                    style: Theme.of(context).textTheme.bodyLarge,
-                    //textoverflow does not work (might be cuz i lack "expanded"?)
-                    // softWrap: false,
-                    // maxLines: 1,
-                    // overflow: TextOverflow.ellipsis,
-                  ),
-                  Text(
-                    data['timestamp'].toString(),
-                    style: Theme.of(context).textTheme.bodySmall,
-                    // softWrap: false,
-                    // maxLines: 1,
-                    // overflow: TextOverflow.ellipsis,
-                  )
-                ],
+              Text(
+                data['name'],
+                style: Theme.of(context).textTheme.bodyLarge,
+                //textoverflow does not work (might be cuz i lack "expanded"?)
+                // softWrap: false,
+                // maxLines: 1,
+                // overflow: TextOverflow.ellipsis,
               ),
               GestureDetector(
                 onTap: onTapConversation,
