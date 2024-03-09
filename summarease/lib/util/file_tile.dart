@@ -32,7 +32,7 @@ class FileTile extends StatelessWidget {
               ),
               GestureDetector(
                 onTap: onTapConversation,
-                child: const Icon(Icons.remove_red_eye),
+                child: const Icon(Icons.chat),
               ),
               Icon(Icons.download),
             ],

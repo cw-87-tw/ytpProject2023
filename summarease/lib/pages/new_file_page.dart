@@ -289,7 +289,7 @@ class _NewFilePageState extends State<NewFilePage> {
           .collection('userFile')
           .doc(userId)
           .collection('userVideos')
-          .doc('video #${videoIDs.length}')
+          .doc('video #$videoNumber')
           .set(userVideoData)
           .then((value) async {
         // pop out the uploading dialog
