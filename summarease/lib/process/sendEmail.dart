@@ -3,8 +3,8 @@ import 'package:flutter_email_sender/flutter_email_sender.dart';
 Future<void> sendEmail(String recipient, String subject, String body) async {
   final Email email = Email(
     recipients: [recipient],
-    subject: 'test',
-    body: 'this is body',
+    subject: subject,
+    body: body,
   );
 
   try {
