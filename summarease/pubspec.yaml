@@ -56,7 +56,7 @@ dependencies:
   just_audio: ^0.9.36
   
   # send Email
-  email_launcher:
+  flutter_email_sender:
 
 dev_dependencies:
   flutter_test:

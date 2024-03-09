@@ -257,7 +257,6 @@ class _NewFilePageState extends State<NewFilePage> {
       file = File(result.files.single.path!);
       final storageRef = FirebaseStorage.instance.ref();
 
-      List videoIDs = [];
       int videoNumber = 0;
 
       // get video numbers
@@ -283,7 +282,7 @@ class _NewFilePageState extends State<NewFilePage> {
           .collection('userFile')
           .doc(userId)
           .collection('userVideos')
-          .doc('video #${videoIDs.length}')
+          .doc('video #$videoNumber')
           .set(userVideoData)
           .then((value) async {
         // pop out the uploading dialog

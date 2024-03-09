@@ -1,15 +1,16 @@
-import 'package:email_launcher/email_launcher.dart';
+import 'package:flutter_email_sender/flutter_email_sender.dart';
 
 Future<void> sendEmail(String recipient, String subject, String body) async {
   final Email email = Email(
-    to: [recipient],
-    subject: subject,
-    body: body,
+    recipients: [recipient],
+    subject: 'test',
+    body: 'this is body',
   );
-  print("Trying to send email\n\n\n");
 
-  await EmailLauncher.launch(email);
-
-  print("Email sent\n\n");
-
+  try {
+    await FlutterEmailSender.send(email);
+    print("sent\n\n\n\n");
+  } catch (error) {
+    print('error: $error\n\n\n');
+  }
 }
