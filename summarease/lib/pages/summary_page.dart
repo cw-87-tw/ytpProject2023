@@ -8,9 +8,9 @@ import 'package:summarease/process/textSummary.dart';
 import 'package:summarease/util/msg_tile.dart';
 import 'package:summarease/util/send_button.dart';
 import '../read_data/conversation.dart';
+import '../process/sendEmail.dart';
 
 class SummaryPage extends StatefulWidget {
-
   final videoIndex;
 
   SummaryPage({required this.videoIndex, super.key});
@@ -20,7 +20,6 @@ class SummaryPage extends StatefulWidget {
 }
 
 class _SummaryPageState extends State<SummaryPage> {
-  
   Conversation conversation = Conversation();
 
   User? user = FirebaseAuth.instance.currentUser;
@@ -34,7 +33,8 @@ class _SummaryPageState extends State<SummaryPage> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) => scrollToBottom());
+    WidgetsBinding.instance
+        .addPostFrameCallback((timeStamp) => scrollToBottom());
   }
 
   @override
@@ -44,11 +44,12 @@ class _SummaryPageState extends State<SummaryPage> {
   }
 
   void scrollToBottom() {
-    scroll_controller.animateTo(
-      scroll_controller.position.maxScrollExtent,
-      duration: Duration(milliseconds: 300), 
-      curve: Curves.easeOut
-    );
+    scroll_controller.animateTo(scroll_controller.position.maxScrollExtent,
+        duration: Duration(milliseconds: 300), curve: Curves.easeOut);
+  }
+
+  void callSendEmail() async {
+    await sendEmail("113113113aaasssddd@gmail.com", "This is subject", "I'm sleepy");
   }
 
   @override
@@ -59,10 +60,8 @@ class _SummaryPageState extends State<SummaryPage> {
         actions: [
           Padding(
             padding: const EdgeInsets.all(10.0),
-            child: GestureDetector(
-              onTap: ,
-              child: Icon(Icons.mail)
-            ),
+            child:
+                GestureDetector(onTap: callSendEmail, child: Icon(Icons.mail)),
           ),
         ],
       ),
@@ -72,63 +71,65 @@ class _SummaryPageState extends State<SummaryPage> {
           children: [
             //show conversation
             StreamBuilder(
-              stream: conversation.getConversation(widget.videoIndex), 
-              builder: (context, snapshot) {
-        
-                //if error
-                if (snapshot.hasError) {
-                  return Center(child: Text("Something went wrong"));
-                }
-        
-                //show loading circle
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(child: CircularProgressIndicator());
-                }
-        
-                //get conversation
-                var jsonData = jsonDecode(snapshot.data!['conversation']);
-                msgs = jsonData['messages'];
-        
-                //if no msgs (which shouldn't happen at all...?)
-                if (snapshot.data == null || msgs.isEmpty) {
-                  return Center(
-                    child: Padding(
-                      padding: EdgeInsets.all(25),
-                      child: Text("沒有對話紀錄"),
+                stream: conversation.getConversation(widget.videoIndex),
+                builder: (context, snapshot) {
+                  //if error
+                  if (snapshot.hasError) {
+                    return Center(child: Text("Something went wrong"));
+                  }
+
+                  //show loading circle
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(child: CircularProgressIndicator());
+                  }
+
+                  //get conversation
+                  var jsonData = jsonDecode(snapshot.data!['conversation']);
+                  msgs = jsonData['messages'];
+
+                  //if no msgs (which shouldn't happen at all...?)
+                  if (snapshot.data == null || msgs.isEmpty) {
+                    return Center(
+                      child: Padding(
+                        padding: EdgeInsets.all(25),
+                        child: Text("沒有對話紀錄"),
+                      ),
+                    );
+                  }
+
+                  //show msgs as list
+                  return Expanded(
+                    child: ListView.builder(
+                      controller: scroll_controller,
+                      shrinkWrap: true,
+                      itemCount: msgs.length,
+                      itemBuilder: (context, index) {
+                        return MsgTile(
+                          role: msgs[index]["role"].toString(),
+                          content: msgs[index]["content"].toString(),
+                        );
+                      },
                     ),
                   );
-                }
-        
-                //show msgs as list
-                return Expanded(
-                  child: ListView.builder(
-                    controller: scroll_controller,
-                    shrinkWrap: true,
-                    itemCount: msgs.length,
-                    itemBuilder: (context, index) {
-                      return MsgTile(
-                        role: msgs[index]["role"].toString(), 
-                        content: msgs[index]["content"].toString(),
-                      );
-                    },
-                  ),
-                );
-              }
+                }),
+
+            SizedBox(
+              height: 10,
             ),
-            
-            SizedBox(height: 10,),
-        
+
             //page down button
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 15.0),
               child: FloatingActionButton(
-                backgroundColor: Theme.of(context).colorScheme.surface,
-                elevation: 0,
-                child: Icon(Icons.arrow_downward, color: Colors.black,),
-                onPressed: scrollToBottom
-              ),
+                  backgroundColor: Theme.of(context).colorScheme.surface,
+                  elevation: 0,
+                  child: Icon(
+                    Icons.arrow_downward,
+                    color: Colors.black,
+                  ),
+                  onPressed: scrollToBottom),
             ),
-        
+
             //textfield & send button
             Padding(
               padding: const EdgeInsets.only(top: 10.0, bottom: 25.0),
@@ -140,36 +141,33 @@ class _SummaryPageState extends State<SummaryPage> {
                       child: TextField(
                         controller: msg_controller,
                         decoration: InputDecoration(
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10.0),
-                          ),
-                          labelText: 'Ask ChatGPT something...',
-                          labelStyle: TextStyle(color: Colors.grey)
-                        ),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                            labelText: 'Ask ChatGPT something...',
+                            labelStyle: TextStyle(color: Colors.grey)),
                       ),
                     ),
                   ),
-                  SendButton(
-                    onTap: () async {
-                      //if empty
-                      if (msg_controller.text.isEmpty) return;
-              
-                      //add user msg to list
-                      msgs.add({"role" : "user", "content" : msg_controller.text});
-                      msg_controller.clear();
-        
-                      //call chatgpt
-                      String aiMsg = await sendAPIMessage(msgs, "");
-                      msgs.add({"role" : "system", "content" : aiMsg});
-        
-                      //update conversation
-                      await conversation.updateConversation(msgs, widget.videoIndex);
-        
-                      //auto scroll
-                      scrollToBottom();
-        
-                    }
-                  ),
+                  SendButton(onTap: () async {
+                    //if empty
+                    if (msg_controller.text.isEmpty) return;
+
+                    //add user msg to list
+                    msgs.add({"role": "user", "content": msg_controller.text});
+                    msg_controller.clear();
+
+                    //call chatgpt
+                    String aiMsg = await sendAPIMessage(msgs, "");
+                    msgs.add({"role": "system", "content": aiMsg});
+
+                    //update conversation
+                    await conversation.updateConversation(
+                        msgs, widget.videoIndex);
+
+                    //auto scroll
+                    scrollToBottom();
+                  }),
                 ],
               ),
             )
