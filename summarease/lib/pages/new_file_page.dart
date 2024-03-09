@@ -195,7 +195,7 @@ class _NewFilePageState extends State<NewFilePage> {
       'summary': summary,
       'timestamp': Timestamp.now(),
       'name': 'video_$videoNumber',
-      'conversation' : '{"messages" : [{"role" : "user", "content" : "hi"}]}'
+      'conversation' : '{"messages" : [{"role" : "system", "content" : "$summary"}]}'
     };
 
     await FirebaseFirestore.instance

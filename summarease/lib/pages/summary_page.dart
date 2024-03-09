@@ -53,7 +53,9 @@ class _SummaryPageState extends State<SummaryPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        title: Text("對話")
+      ),
       body: Column(
         children: [
           //show conversation
@@ -104,15 +106,12 @@ class _SummaryPageState extends State<SummaryPage> {
 
           //page down button
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                FloatingActionButton(
-                  child: Icon(Icons.arrow_downward),
-                  onPressed: scrollToBottom
-                ),
-              ],
+            padding: const EdgeInsets.symmetric(horizontal: 15.0),
+            child: FloatingActionButton(
+              backgroundColor: Theme.of(context).colorScheme.surface,
+              elevation: 0,
+              child: Icon(Icons.arrow_downward, color: Colors.black,),
+              onPressed: scrollToBottom
             ),
           ),
 
