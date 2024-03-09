@@ -60,7 +60,7 @@ class _SummaryPageState extends State<SummaryPage> {
           Padding(
             padding: const EdgeInsets.all(10.0),
             child: GestureDetector(
-              onTap: sendEmail,
+              onTap: ,
               child: Icon(Icons.mail)
             ),
           ),
