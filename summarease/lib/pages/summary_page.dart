@@ -59,9 +59,17 @@ class _SummaryPageState extends State<SummaryPage> {
         title: Text("對話"),
         actions: [
           Padding(
-            padding: const EdgeInsets.all(10.0),
-            child:
-                GestureDetector(onTap: callSendEmail, child: Icon(Icons.mail)),
+            padding: const EdgeInsets.all(15.0),
+            child: GestureDetector(
+                onTap: callSendEmail, 
+                child: Row(
+                  children: [
+                    Text("Send Email"),
+                    SizedBox(width: 8.0,),
+                    Icon(Icons.mail),
+                  ],
+                )
+            ),
           ),
         ],
       ),
