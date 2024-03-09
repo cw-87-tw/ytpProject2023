@@ -54,7 +54,9 @@ dependencies:
   flutter_ffmpeg: ^0.4.2
   http: ^1.2.0
   just_audio: ^0.9.36
-  # flutter_sound: ^8.0.0
+  
+  # send Email
+  flutter_email_sender:
 
 dev_dependencies:
   flutter_test:
