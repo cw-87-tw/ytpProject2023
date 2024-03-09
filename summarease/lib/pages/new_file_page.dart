@@ -149,9 +149,11 @@ class _NewFilePageState extends State<NewFilePage> {
                         Text('Summarize Successful',
                             textAlign: TextAlign.left,
                             style: TextStyle(
-                                fontWeight: FontWeight.normal,
-                                color: Colors.black87,
-                                fontSize: 20)),
+                              fontWeight: FontWeight.normal,
+                              color: Colors.black87,
+                              fontSize: 15,
+                            )
+                          ),
                       ],
                     ),
                   ),
