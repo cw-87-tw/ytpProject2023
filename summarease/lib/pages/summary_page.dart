@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:summarease/process/sendEmail.dart';
 import 'package:summarease/process/textSummary.dart';
 import 'package:summarease/util/msg_tile.dart';
 import 'package:summarease/util/send_button.dart';
@@ -54,7 +55,16 @@ class _SummaryPageState extends State<SummaryPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("對話")
+        title: Text("對話"),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: GestureDetector(
+              onTap: sendEmail,
+              child: Icon(Icons.mail)
+            ),
+          ),
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.only(top: 10.0),
