@@ -42,19 +42,10 @@ class AccountPage extends StatelessWidget {
               SizedBox(height: 50),
               SizedBox(
                 width: 300,
-                child: Column(
-                  children: [
-                    OpTile(
-                      opName: '更改密碼',
-                      color: Theme.of(context).colorScheme.secondary,
-                      onTap: changePw,
-                    ),
-                    OpTile(
-                      opName: '登出',
-                      color: Theme.of(context).colorScheme.secondary,
-                      onTap: signUserOut,
-                    ),
-                  ],
+                child: OpTile(
+                  opName: '登出',
+                  color: Theme.of(context).colorScheme.secondary,
+                  onTap: signUserOut,
                 ),
               ),
               SizedBox(height: 30),

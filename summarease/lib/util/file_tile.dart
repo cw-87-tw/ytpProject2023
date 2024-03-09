@@ -10,7 +10,7 @@ class FileTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 5),
+      padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
       child: Container(
         decoration: BoxDecoration(
           color: Colors.grey.shade100,
@@ -22,19 +22,23 @@ class FileTile extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               const Icon(Icons.video_file, size: 30,),
-              Text(
-                data['name'],
-                style: Theme.of(context).textTheme.bodyLarge,
-                //textoverflow does not work (might be cuz i lack "expanded"?)
-                // softWrap: false,
-                // maxLines: 1,
-                // overflow: TextOverflow.ellipsis,
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  child: Text(
+                    data['name'],
+                    style: Theme.of(context).textTheme.bodyLarge,
+                    //textoverflow does not work (might be cuz i lack "expanded"?)
+                    // softWrap: false,
+                    // maxLines: 1,
+                    // overflow: TextOverflow.ellipsis,
+                  ),
+                ),
               ),
               GestureDetector(
                 onTap: onTapConversation,
-                child: const Icon(Icons.remove_red_eye),
+                child: const Icon(Icons.chat),
               ),
-              Icon(Icons.download),
             ],
           ),
         ),

@@ -14,7 +14,7 @@ class HistoryPage extends StatefulWidget {
     final videosStream = 
       FirebaseFirestore.instance.collection('userFile')
       .doc(user!.uid).collection('userVideos')
-      .orderBy('timestamp', descending: true).snapshots();
+      .orderBy('timestamp', descending: false).snapshots();
     return videosStream;
   }
 
@@ -67,22 +67,25 @@ class _HistoryPageState extends State<HistoryPage> {
 
           //show files as list
           return Expanded(
-            child: ListView.builder(
-              shrinkWrap: true,
-              itemCount: videos.length,
-              itemBuilder: (context, index) {
-                return FileTile(
-                  data: videos[index],
-                  onTapConversation: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => SummaryPage(videoIndex: index)
-                      )
-                    );
-                  },
-                );
-              },
+            child: Padding(
+              padding: const EdgeInsets.only(top: 10.0),
+              child: ListView.builder(
+                shrinkWrap: true,
+                itemCount: videos.length,
+                itemBuilder: (context, index) {
+                  return FileTile(
+                    data: videos[index],
+                    onTapConversation: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => SummaryPage(videoIndex: index)
+                        )
+                      );
+                    },
+                  );
+                },
+              ),
             ),
           );
         },
