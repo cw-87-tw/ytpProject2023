@@ -7,7 +7,7 @@ import 'package:summarease/util/file_tile.dart';
 class HistoryPage extends StatefulWidget {
   HistoryPage({super.key});
 
-  User? user = FirebaseAuth.instance.currentUser;
+  final User? user = FirebaseAuth.instance.currentUser;
 
   //get all user videos
   Stream<QuerySnapshot> getUserVideos() {

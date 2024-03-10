@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class SendButton extends StatelessWidget {
-  Function()? onTap;
+  final Function()? onTap;
   SendButton({required this.onTap, super.key});
 
   @override

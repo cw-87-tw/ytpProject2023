@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class OpTile extends StatelessWidget {
   final String opName;
   final Color? color;
-  void Function()? onTap;
+  final void Function()? onTap;
 
   OpTile({
     super.key,
