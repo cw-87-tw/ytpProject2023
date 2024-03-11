@@ -1,6 +1,4 @@
-import 'dart:async';
 import 'dart:convert';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:summarease/process/sendEmail.dart';
@@ -8,7 +6,6 @@ import 'package:summarease/process/textSummary.dart';
 import 'package:summarease/util/msg_tile.dart';
 import 'package:summarease/util/send_button.dart';
 import '../read_data/conversation.dart';
-import '../process/sendEmail.dart';
 
 class SummaryPage extends StatefulWidget {
   final videoIndex;
@@ -45,7 +42,7 @@ class _SummaryPageState extends State<SummaryPage> {
 
   void scrollToBottom() {
     scroll_controller.animateTo(scroll_controller.position.maxScrollExtent,
-        duration: Duration(milliseconds: 300), curve: Curves.easeOut);
+        duration: Duration(milliseconds: 500), curve: Curves.easeOut);
   }
 
   void callSendEmail() async {
@@ -126,16 +123,21 @@ class _SummaryPageState extends State<SummaryPage> {
             ),
 
             //page down button
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15.0),
+            SizedBox(
+              height: 40.0,
+              width: 40.0,
               child: FloatingActionButton(
-                  backgroundColor: Theme.of(context).colorScheme.surface,
-                  elevation: 0,
-                  child: Icon(
-                    Icons.arrow_downward,
-                    color: Colors.black,
-                  ),
-                  onPressed: scrollToBottom),
+                backgroundColor: Theme.of(context).colorScheme.surface,
+                elevation: 0,
+                child: Icon(
+                  size: 20.0,
+                  Icons.arrow_downward,
+                  color: Colors.black,
+                ),
+                onPressed: () {
+                  scrollToBottom();
+                }
+              ),
             ),
 
             //textfield & send button
@@ -143,6 +145,7 @@ class _SummaryPageState extends State<SummaryPage> {
               padding: const EdgeInsets.only(top: 10.0, bottom: 25.0),
               child: Row(
                 children: [
+
                   Expanded(
                     child: Padding(
                       padding: const EdgeInsets.only(left: 16.0),
@@ -157,6 +160,7 @@ class _SummaryPageState extends State<SummaryPage> {
                       ),
                     ),
                   ),
+
                   SendButton(onTap: () async {
                     //if empty
                     if (msg_controller.text.isEmpty) return;
@@ -165,16 +169,25 @@ class _SummaryPageState extends State<SummaryPage> {
                     msgs.add({"role": "user", "content": msg_controller.text});
                     msg_controller.clear();
 
+                    //update user msg
+                    await conversation.updateConversation(msgs, widget.videoIndex);
+
+                    //auto scroll
+                    scrollToBottom();
+                    
+                    //hide phone keyboard
+                    FocusScope.of(context).requestFocus(FocusNode());
+
                     //call chatgpt
                     String aiMsg = await sendAPIMessage(msgs, "");
                     msgs.add({"role": "system", "content": aiMsg});
 
-                    //update conversation
-                    await conversation.updateConversation(
-                        msgs, widget.videoIndex);
+                    //update chatgpt message
+                    await conversation.updateConversation(msgs, widget.videoIndex);
 
                     //auto scroll
                     scrollToBottom();
+                    
                   }),
                 ],
               ),

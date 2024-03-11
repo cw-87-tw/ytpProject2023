@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class FileTile extends StatelessWidget {
   
   final data;
-  Function()? onTapConversation;
+  final Function()? onTapConversation;
 
   FileTile({required this.data, required this.onTapConversation, super.key});
 
