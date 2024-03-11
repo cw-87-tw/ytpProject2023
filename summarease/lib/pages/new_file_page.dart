@@ -302,10 +302,6 @@ class _NewFilePageState extends State<NewFilePage> {
     }
   }
 
-  void setEmailRecipient() async {
-    // showUploadingDialog();
-    await sendEmail("113113113aaasssddd@gmail.com", "Test", "test email");
-  }
 
   @override
   Widget build(BuildContext context) {
