@@ -5,8 +5,6 @@ import 'package:flutter_ffmpeg/flutter_ffmpeg.dart';
 import 'package:just_audio/just_audio.dart';
 
 Future<String> extractAudio(String videoFilePath) async {
-  // extract the audio here
-  print("start extract audio\n");
   final flutterFFmpeg = FlutterFFmpeg();
   // final outputDirectory = Directory.systemTemp.path;
   final outputDirectory =
@@ -40,7 +38,7 @@ Future<String> extractAudio(String videoFilePath) async {
 Future<List<String>> splitAudioIntoSegments(
     String audioFilePath, int segmentDurationInSeconds) async {
   final flutterFFmpeg = FlutterFFmpeg();
-  final player = AudioPlayer(); // Create a player
+  final player = AudioPlayer();
   final audioDuration = await player.setUrl(audioFilePath);
   print("Duration: ${audioDuration?.inSeconds ?? -1}\n\n\n\n\n");
   // Calculate number of segments
