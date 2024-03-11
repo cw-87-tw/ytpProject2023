@@ -1,10 +1,10 @@
 import 'package:flutter_email_sender/flutter_email_sender.dart';
 
-Future<void> sendEmail(String recipient, String subject, String body) async {
+Future<void> sendEmail(List<String> recipient, String subject, String body) async {
   final Email email = Email(
-    recipients: [recipient],
-    subject: 'test',
-    body: 'this is body',
+    recipients: recipient,
+    subject: subject,
+    body: body,
   );
 
   try {

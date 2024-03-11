@@ -58,19 +58,25 @@ class _LoginPageState extends State<LoginPage> {
               borderRadius: BorderRadius.circular(10.0),
               // side: BorderSide(width: 2, color: Colors.red.shade300)
             ),
-            title: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Center(
-                  child: Row(
-                    children: [
-                      Icon(Icons.warning_amber, color: Colors.red.shade300,),
-                      Text(
-                        ' Error: ' + msg,
-                        style: TextStyle(color: Colors.red.shade300, fontSize: 20)
+            title: Center(
+                child: Row(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Icon(Icons.warning_amber, color: Colors.red.shade300,),
+                    ),
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                        child: Text(
+                          "Error: $msg",
+                          style: TextStyle(color: Colors.red.shade300, fontSize: 20),
+                          softWrap: true,
+                        ),
                       ),
-                    ],
-                  )
-              ),
+                    ),
+                  ],
+                )
             ),
           );
         }

@@ -1,15 +1,13 @@
-import 'dart:async';
 import 'dart:convert';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:summarease/process/sendEmail.dart';
 import 'package:summarease/process/textSummary.dart';
 import 'package:summarease/util/msg_tile.dart';
 import 'package:summarease/util/send_button.dart';
 import '../read_data/conversation.dart';
 
 class SummaryPage extends StatefulWidget {
-
   final videoIndex;
 
   SummaryPage({required this.videoIndex, super.key});
@@ -19,7 +17,6 @@ class SummaryPage extends StatefulWidget {
 }
 
 class _SummaryPageState extends State<SummaryPage> {
-  
   Conversation conversation = Conversation();
 
   User? user = FirebaseAuth.instance.currentUser;
@@ -33,7 +30,8 @@ class _SummaryPageState extends State<SummaryPage> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) => scrollToBottom());
+    WidgetsBinding.instance
+        .addPostFrameCallback((timeStamp) => scrollToBottom());
   }
 
   @override
@@ -43,124 +41,159 @@ class _SummaryPageState extends State<SummaryPage> {
   }
 
   void scrollToBottom() {
-    scroll_controller.animateTo(
-      scroll_controller.position.maxScrollExtent,
-      duration: Duration(milliseconds: 300), 
-      curve: Curves.easeOut
-    );
+    scroll_controller.animateTo(scroll_controller.position.maxScrollExtent,
+        duration: Duration(milliseconds: 500), curve: Curves.easeOut);
+  }
+
+  void callSendEmail() async {
+    await sendEmail(["113113113aaasssddd@gmail.com"], "This is subject", "I'm sleepy");
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
-      body: Column(
-        children: [
-          //show conversation
-          StreamBuilder(
-            stream: conversation.getConversation(widget.videoIndex), 
-            builder: (context, snapshot) {
-
-              //if error
-              if (snapshot.hasError) {
-                return Center(child: Text("Something went wrong"));
-              }
-
-              //show loading circle
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return Center(child: CircularProgressIndicator());
-              }
-
-              //get conversation
-              var jsonData = jsonDecode(snapshot.data!['conversation']);
-              msgs = jsonData['messages'];
-
-              //if no msgs (which shouldn't happen at all...?)
-              if (snapshot.data == null || msgs.isEmpty) {
-                return Center(
-                  child: Padding(
-                    padding: EdgeInsets.all(25),
-                    child: Text("沒有對話紀錄"),
-                  ),
-                );
-              }
-
-              //show msgs as list
-              return Expanded(
-                child: ListView.builder(
-                  controller: scroll_controller,
-                  shrinkWrap: true,
-                  itemCount: msgs.length,
-                  itemBuilder: (context, index) {
-                    return MsgTile(
-                      role: msgs[index]["role"].toString(), 
-                      content: msgs[index]["content"].toString(),
-                    );
-                  },
-                ),
-              );
-            }
-          ),
-
-          //page down button
+      appBar: AppBar(
+        title: Text("對話"),
+        actions: [
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                FloatingActionButton(
-                  child: Icon(Icons.arrow_downward),
-                  onPressed: scrollToBottom
-                ),
-              ],
+            padding: const EdgeInsets.all(15.0),
+            child: GestureDetector(
+                onTap: callSendEmail, 
+                child: Row(
+                  children: [
+                    Text("Send Email"),
+                    SizedBox(width: 8.0,),
+                    Icon(Icons.mail),
+                  ],
+                )
             ),
           ),
+        ],
+      ),
+      body: Padding(
+        padding: const EdgeInsets.only(top: 10.0),
+        child: Column(
+          children: [
+            //show conversation
+            StreamBuilder(
+                stream: conversation.getConversation(widget.videoIndex),
+                builder: (context, snapshot) {
+                  //if error
+                  if (snapshot.hasError) {
+                    return Center(child: Text("Something went wrong"));
+                  }
 
-          //textfield & send button
-          Padding(
-            padding: const EdgeInsets.only(top: 10.0, bottom: 25.0),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 16.0),
-                    child: TextField(
-                      controller: msg_controller,
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10.0),
-                        ),
-                        labelText: 'Ask ChatGPT something...',
-                        labelStyle: TextStyle(color: Colors.grey)
+                  //show loading circle
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(child: CircularProgressIndicator());
+                  }
+
+                  //get conversation
+                  var jsonData = jsonDecode(snapshot.data!['conversation']);
+                  msgs = jsonData['messages'];
+
+                  //if no msgs (which shouldn't happen at all...?)
+                  if (snapshot.data == null || msgs.isEmpty) {
+                    return Center(
+                      child: Padding(
+                        padding: EdgeInsets.all(25),
+                        child: Text("沒有對話紀錄"),
+                      ),
+                    );
+                  }
+
+                  //show msgs as list
+                  return Expanded(
+                    child: ListView.builder(
+                      controller: scroll_controller,
+                      shrinkWrap: true,
+                      itemCount: msgs.length,
+                      itemBuilder: (context, index) {
+                        return MsgTile(
+                          role: msgs[index]["role"].toString(),
+                          content: msgs[index]["content"].toString(),
+                        );
+                      },
+                    ),
+                  );
+                }),
+
+            SizedBox(
+              height: 10,
+            ),
+
+            //page down button
+            SizedBox(
+              height: 40.0,
+              width: 40.0,
+              child: FloatingActionButton(
+                backgroundColor: Theme.of(context).colorScheme.surface,
+                elevation: 0,
+                child: Icon(
+                  size: 20.0,
+                  Icons.arrow_downward,
+                  color: Colors.black,
+                ),
+                onPressed: () {
+                  scrollToBottom();
+                }
+              ),
+            ),
+
+            //textfield & send button
+            Padding(
+              padding: const EdgeInsets.only(top: 10.0, bottom: 25.0),
+              child: Row(
+                children: [
+
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 16.0),
+                      child: TextField(
+                        controller: msg_controller,
+                        decoration: InputDecoration(
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                            labelText: 'Ask ChatGPT something...',
+                            labelStyle: TextStyle(color: Colors.grey)),
                       ),
                     ),
                   ),
-                ),
-                SendButton(
-                  onTap: () async {
+
+                  SendButton(onTap: () async {
                     //if empty
                     if (msg_controller.text.isEmpty) return;
-            
+
                     //add user msg to list
-                    msgs.add({"role" : "user", "content" : msg_controller.text});
+                    msgs.add({"role": "user", "content": msg_controller.text});
                     msg_controller.clear();
 
-                    //call chatgpt
-                    String aiMsg = await sendAPIMessage(msgs, "");
-                    msgs.add({"role" : "system", "content" : aiMsg});
-
-                    //update conversation
+                    //update user msg
                     await conversation.updateConversation(msgs, widget.videoIndex);
 
                     //auto scroll
                     scrollToBottom();
+                    
+                    //hide phone keyboard
+                    FocusScope.of(context).requestFocus(FocusNode());
 
-                  }
-                ),
-              ],
-            ),
-          )
-        ],
+                    //call chatgpt
+                    String aiMsg = await sendAPIMessage(msgs, "");
+                    msgs.add({"role": "system", "content": aiMsg});
+
+                    //update chatgpt message
+                    await conversation.updateConversation(msgs, widget.videoIndex);
+
+                    //auto scroll
+                    scrollToBottom();
+                    
+                  }),
+                ],
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
