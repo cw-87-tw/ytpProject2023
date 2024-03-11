@@ -48,13 +48,12 @@ Future<String> summarizeText(String text) async {
   return await callAPI(msgs);
 }
 
-Future<String> sendAPIMessage(List chatMsgs, String script) async {
+Future<String> sendAPIMessage(List chatMsgs) async {
   List msgs = [
     {
       "role": "system",
       "content": defaultPrompt
     },
-    {"role": "user", "content": script},
   ];
   msgs.addAll(chatMsgs);
   return await callAPI(msgs);

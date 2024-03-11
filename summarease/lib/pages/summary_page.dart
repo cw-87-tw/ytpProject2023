@@ -110,7 +110,8 @@ class _SummaryPageState extends State<SummaryPage> {
                       shrinkWrap: true,
                       itemCount: msgs.length,
                       itemBuilder: (context, index) {
-                        return MsgTile(
+                        if (index <= 2) return SizedBox(height: 0.1,);
+                        else return MsgTile(
                           role: msgs[index]["role"].toString(),
                           content: msgs[index]["content"].toString(),
                         );
@@ -179,18 +180,8 @@ class _SummaryPageState extends State<SummaryPage> {
                     //hide phone keyboard
                     FocusScope.of(context).requestFocus(FocusNode());
 
-                    String script = "";
-
-                    //call chatgpt  
-                    DocumentReference vid = 
-                      FirebaseFirestore.instance.collection('userFile')
-                      .doc(user!.uid).collection('userVideos').doc('video #${widget.videoIndex}');
-                    vid.get().then((doc) {
-                      final data = doc.data() as Map<String, dynamic>;
-                      script = data['script'];
-                    });
-
-                    String aiMsg = await sendAPIMessage(msgs, script);
+                    //call chatgpt
+                    String aiMsg = await sendAPIMessage(msgs);
                     msgs.add({"role": "system", "content": aiMsg});
 
                     //update chatgpt message
