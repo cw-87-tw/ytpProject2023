@@ -110,7 +110,7 @@ class _SummaryPageState extends State<SummaryPage> {
                       shrinkWrap: true,
                       itemCount: msgs.length,
                       itemBuilder: (context, index) {
-                        if (index <= 2) return SizedBox(height: 0.1,);
+                        if (index < 2) return SizedBox(height: 0.1,);
                         else return MsgTile(
                           role: msgs[index]["role"].toString(),
                           content: msgs[index]["content"].toString(),

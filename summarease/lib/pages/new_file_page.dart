@@ -191,7 +191,7 @@ class _NewFilePageState extends State<NewFilePage> {
     var transcription = await convertSpeechToText(file.path);
     var summary = await summarizeText(transcription);
 
-    String prompt = 'You are a helpful assistant. You need to summarize the text given by the user. Please answer all my question in English or Traditional Chinese. Please, do not use Simplified Chinese in the conversation later on no matter what.';
+    String prompt = "You are a helpful assistant. You need to summarize the text given by the user. Please answer all my question in English or Traditional Chinese. Please, do not use Simplified Chinese in the conversation later on no matter what.";
 
     // upload the `summary` here
     Map<String, dynamic> userVideoData = {
@@ -199,7 +199,7 @@ class _NewFilePageState extends State<NewFilePage> {
       'summary': summary,
       'timestamp': Timestamp.now(),
       'name': 'video_$videoNumber',
-      'conversation' : '{"messages" : [{"role": "system", "content" : $prompt}, {"role" : "user", "content" : $transcription}, {"role" : "system", "content" : "$summary"}]}'
+      'conversation' : '{"messages" : [{"role": "system", "content" : "$prompt"}, {"role" : "user", "content" : "$transcription"}, {"role" : "system", "content" : "$summary"}]}'
     };
 
     await FirebaseFirestore.instance
