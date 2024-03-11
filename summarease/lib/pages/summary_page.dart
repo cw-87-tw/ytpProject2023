@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:summarease/process/sendEmail.dart';
@@ -178,8 +179,18 @@ class _SummaryPageState extends State<SummaryPage> {
                     //hide phone keyboard
                     FocusScope.of(context).requestFocus(FocusNode());
 
-                    //call chatgpt
-                    String aiMsg = await sendAPIMessage(msgs, "");
+                    String script = "";
+
+                    //call chatgpt  
+                    DocumentReference vid = 
+                      FirebaseFirestore.instance.collection('userFile')
+                      .doc(user!.uid).collection('userVideos').doc('video #${widget.videoIndex}');
+                    vid.get().then((doc) {
+                      final data = doc.data() as Map<String, dynamic>;
+                      script = data['script'];
+                    });
+
+                    String aiMsg = await sendAPIMessage(msgs, script);
                     msgs.add({"role": "system", "content": aiMsg});
 
                     //update chatgpt message
