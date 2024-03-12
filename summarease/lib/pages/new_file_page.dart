@@ -251,7 +251,7 @@ class _NewFilePageState extends State<NewFilePage> {
   Future<void> newVideoProject() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(
       type: FileType.custom,
-      allowedExtensions: ['mp4', 'avi', 'mkv', 'flv', 'mov'],
+      allowedExtensions: ['mp4', 'avi', 'mkv', 'flv', 'mov', 'm4a', 'wav'],
     );
 
     if (result != null) {
