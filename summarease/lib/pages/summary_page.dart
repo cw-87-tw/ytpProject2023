@@ -48,11 +48,7 @@ class _SummaryPageState extends State<SummaryPage> {
 
   void callSendEmail() async {
     
-<<<<<<< HEAD
-    await sendEmail([], "This is subject", "This is body(to be finished)");
-=======
     await sendEmail(["113113113aaasssddd@gmail.com"], "This is subject", "I'm sleepy");
->>>>>>> 70ac735ac5810cbbce56ceb9894d95740a9eb62a
   }
 
   @override
