@@ -51,7 +51,12 @@ class _SummaryPageState extends State<SummaryPage> {
       FirebaseFirestore.instance.collection('userFile')
       .doc(user!.uid).collection('userVideos').doc('video #${widget.videoIndex}');
     vid.get().then((doc) async {
-      await sendEmail([user!.email!], "Summarease ${doc['name']} conversation", doc['conversation']);
+      List _msgs = jsonDecode(doc['conversation'])['messages'];
+      String result = "";
+      for (int i = 0; i < _msgs.length; i++) {
+        result += "${_msgs[i]['role']} : ${_msgs[i]['content']}\n";
+      }
+      await sendEmail([user!.email!], "Summarease ${doc['name']} conversation", result);
     });
   }
 
