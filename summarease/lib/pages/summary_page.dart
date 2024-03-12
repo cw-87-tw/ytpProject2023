@@ -54,7 +54,7 @@ class _SummaryPageState extends State<SummaryPage> {
       List _msgs = jsonDecode(doc['conversation'])['messages'];
       String result = "";
       for (int i = 0; i < _msgs.length; i++) {
-        result += "${_msgs[i]['role']} : ${_msgs[i]['content']}\n";
+        result += "${_msgs[i]['role']} : \n${_msgs[i]['content']}\n\n";
       }
       await sendEmail([user!.email!], "Summarease ${doc['name']} conversation", result);
     });
