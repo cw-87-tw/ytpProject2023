@@ -47,8 +47,12 @@ class _SummaryPageState extends State<SummaryPage> {
   }
 
   void callSendEmail() async {
-    
-    await sendEmail(["113113113aaasssddd@gmail.com"], "This is subject", "I'm sleepy");
+    DocumentReference vid = 
+      FirebaseFirestore.instance.collection('userFile')
+      .doc(user!.uid).collection('userVideos').doc('video #${widget.videoIndex}');
+    vid.get().then((doc) async {
+      await sendEmail([user!.email!], "Summarease ${doc['name']} conversation", doc['conversation']);
+    });
   }
 
   @override

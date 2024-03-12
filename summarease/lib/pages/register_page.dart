@@ -41,14 +41,15 @@ class _RegisterPageState extends State<RegisterPage> {
           password: password_controller.text.trim(),
         );
 
-        String userId = getCurrentUserId();
+        User? user = FirebaseAuth.instance.currentUser;
         Map<String, dynamic> userRegisterData = {
           'email': email_controller.text.trim(),
           'password': password_controller.text.trim(),
         };
+        Navigator.pop(context);
         await FirebaseFirestore.instance
             .collection('users')
-            .doc(userId)
+            .doc(user!.uid)
             .set(userRegisterData)
             .then((value) {
               print("---------- added users document ----------");
@@ -56,8 +57,6 @@ class _RegisterPageState extends State<RegisterPage> {
             .catchError((error) {
               print("---------- failed adding users document ----------");
             });
-
-        Navigator.pop(context);
       } else {
         Navigator.pop(context);
         showError('passwords don\'t match');

@@ -33,7 +33,7 @@ class AccountPage extends StatelessWidget {
             children: [
               Icon(
                   Icons.account_circle,
-                  size: 200,
+                  size: 150,
                   color: Colors.grey.shade300),
               Text(
                 user.email!,
