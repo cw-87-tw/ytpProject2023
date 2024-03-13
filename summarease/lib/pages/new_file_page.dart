@@ -155,21 +155,11 @@ class _NewFilePageState extends State<NewFilePage> {
           '{"messages" : [{"role": "system", "content" : "$prompt"}, {"role" : "user", "content" : "The following is the class content: $transcription"}, {"role" : "system", "content" : "$summary"}]}'
     };
 
-    await FirebaseFirestore.instance
-        .collection('userFile')
-        .doc(userId)
-        .collection('userVideos')
-        .doc('video #$videoNumber')
-        .set(userVideoData)
-        .then((value) async {
-      // pop out the uploading dialog
-      
-    }).catchError((e) {
-      // pop out the circle dialog
-      Navigator.pop(context);
-      showErrorDialog(e.code);
-      print("---------- Failed to update reference :( ----------");
-    });
+    // upload to `storage`
+    final storageRef = FirebaseStorage.instance.ref();
+    final videosRef =
+        storageRef.child("$userId/videoFiles/video_#$videoNumber");
+    await videosRef.putFile(file);
 
     // uplaod to `firestore`
     await FirebaseFirestore.instance
@@ -184,17 +174,11 @@ class _NewFilePageState extends State<NewFilePage> {
           showSuccessSummarizeDialog();
         })
         .catchError((e) {
-      // pop out the circle dialog
-      Navigator.pop(context);
-      showErrorDialog(e.code);
-      print("---------- Failed to update reference :( ----------");
+          // pop out the circle dialog
+          Navigator.pop(context);
+          showErrorDialog(e.code);
+          print("---------- Failed to update reference :( ----------");
     });
-
-    // upload to `storage`
-    final storageRef = FirebaseStorage.instance.ref();
-    final videosRef =
-        storageRef.child("$userId/videoFiles/video_#$videoNumber");
-    await videosRef.putFile(file);
   }
 
   void showErrorDialog(String msg) {
