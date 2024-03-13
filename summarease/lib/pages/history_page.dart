@@ -44,12 +44,12 @@ class _HistoryPageState extends State<HistoryPage> {
           
           //if error
           if (snapshot.hasError) {
-            return Center(child: Text('Something went wrong'));
+            return const Center(child: Text('Something went wrong'));
           }
 
           //show loading circle
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           }
 
           //get all user videos
@@ -57,7 +57,7 @@ class _HistoryPageState extends State<HistoryPage> {
 
           //if no videos
           if (snapshot.data == null || videos.isEmpty) {
-            return Center(
+            return const Center(
               child: Padding(
                 padding: EdgeInsets.all(25),
                 child: Text("沒有已儲存的專案"),

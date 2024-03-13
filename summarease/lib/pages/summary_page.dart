@@ -9,9 +9,9 @@ import 'package:summarease/util/send_button.dart';
 import '../read_data/conversation.dart';
 
 class SummaryPage extends StatefulWidget {
-  final videoIndex;
+  final int videoIndex;
 
-  SummaryPage({required this.videoIndex, super.key});
+  const SummaryPage({required this.videoIndex, super.key});
 
   @override
   State<SummaryPage> createState() => _SummaryPageState();
@@ -43,7 +43,7 @@ class _SummaryPageState extends State<SummaryPage> {
 
   void scrollToBottom() {
     scroll_controller.animateTo(scroll_controller.position.maxScrollExtent,
-        duration: Duration(milliseconds: 500), curve: Curves.easeOut);
+        duration: const Duration(milliseconds: 500), curve: Curves.easeOut);
   }
 
   void callSendEmail() async {
@@ -64,13 +64,13 @@ class _SummaryPageState extends State<SummaryPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("對話"),
+        title: const Text("對話"),
         actions: [
           Padding(
             padding: const EdgeInsets.all(15.0),
             child: GestureDetector(
                 onTap: callSendEmail, 
-                child: Row(
+                child: const Row(
                   children: [
                     Text("Send Email"),
                     SizedBox(width: 8.0,),
@@ -91,12 +91,12 @@ class _SummaryPageState extends State<SummaryPage> {
                 builder: (context, snapshot) {
                   //if error
                   if (snapshot.hasError) {
-                    return Center(child: Text("Something went wrong"));
+                    return const Center(child: Text("Something went wrong"));
                   }
 
                   //show loading circle
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Center(child: CircularProgressIndicator());
+                    return const Center(child: CircularProgressIndicator());
                   }
 
                   //get conversation
@@ -105,7 +105,7 @@ class _SummaryPageState extends State<SummaryPage> {
 
                   //if no msgs (which shouldn't happen at all...?)
                   if (snapshot.data == null || msgs.isEmpty) {
-                    return Center(
+                    return const Center(
                       child: Padding(
                         padding: EdgeInsets.all(25),
                         child: Text("沒有對話紀錄"),
@@ -120,17 +120,17 @@ class _SummaryPageState extends State<SummaryPage> {
                       shrinkWrap: true,
                       itemCount: msgs.length,
                       itemBuilder: (context, index) {
-                        if (index < 2) return SizedBox(height: 0.1,);
-                        else return MsgTile(
+                        if (index < 2) {return const SizedBox(height: 0.1,);}
+                        else {return MsgTile(
                           role: msgs[index]["role"].toString(),
                           content: msgs[index]["content"].toString(),
-                        );
+                        );}
                       },
                     ),
                   );
                 }),
 
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
 
@@ -141,7 +141,7 @@ class _SummaryPageState extends State<SummaryPage> {
               child: FloatingActionButton(
                 backgroundColor: Theme.of(context).colorScheme.surface,
                 elevation: 0,
-                child: Icon(
+                child: const Icon(
                   size: 20.0,
                   Icons.arrow_downward,
                   color: Colors.black,
@@ -168,7 +168,7 @@ class _SummaryPageState extends State<SummaryPage> {
                               borderRadius: BorderRadius.circular(10.0),
                             ),
                             labelText: 'Ask ChatGPT something...',
-                            labelStyle: TextStyle(color: Colors.grey)),
+                            labelStyle: const TextStyle(color: Colors.grey)),
                       ),
                     ),
                   ),
@@ -177,12 +177,14 @@ class _SummaryPageState extends State<SummaryPage> {
                     //if empty
                     if (msg_controller.text.isEmpty) return;
 
+                    
                     //add user msg to list
                     msgs.add({"role": "user", "content": msg_controller.text});
                     msg_controller.clear();
 
                     //update user msg
                     await conversation.updateConversation(msgs, widget.videoIndex);
+                    print(msgs.length);
 
                     //auto scroll
                     scrollToBottom();

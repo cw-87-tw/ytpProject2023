@@ -19,13 +19,13 @@ class MsgTile extends StatelessWidget {
           children: [
             Row(
               children: [
-                Padding(
+                const Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Icon(Icons.account_circle),
                 ),
                 Text(
                   role,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 16,
                   ),
