@@ -167,7 +167,7 @@ class _NewFilePageState extends State<NewFilePage> {
         .doc(userId)
         .collection('userVideos')
         .doc('video #$videoNumber')
-        .update(userVideoData)
+        .set(userVideoData)
         .then((value) async {
           // pop out the summarizing dialog
           Navigator.pop(context);
