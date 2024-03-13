@@ -1,8 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class FileTile extends StatelessWidget {
   
-  final Map<String, dynamic> data;
+  final DocumentSnapshot data;
   final Function()? onTapConversation;
 
   const FileTile({required this.data, required this.onTapConversation, super.key});
@@ -26,7 +27,7 @@ class FileTile extends StatelessWidget {
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 8.0),
                   child: Text(
-                    data['name'],
+                    data['name']?? 'no name',
                     style: Theme.of(context).textTheme.bodyLarge,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
