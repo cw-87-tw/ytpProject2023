@@ -23,46 +23,6 @@ class _NewFilePageState extends State<NewFilePage> {
   String userId = getCurrentUserId();
   late File file;
 
-  void showUploadingDialog() {
-    showDialog(
-      barrierDismissible: false,
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          content: StatefulBuilder(
-            builder: (BuildContext context, StateSetter setState) {
-              return Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  SizedBox(height: 14),
-                  CircularProgressIndicator(),
-                  SizedBox(height: 28),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      SizedBox(width: 35),
-                      Icon(
-                        Icons.radio_button_unchecked,
-                        color: Colors.grey,
-                        size: 24,
-                      ),
-                      SizedBox(width: 5),
-                      Text(
-                        "Uploading...",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(fontSize: 18),
-                      ),
-                    ],
-                  ),
-                ],
-              );
-            },
-          ),
-        );
-      },
-    );
-  }
-
   void showSummarizingDialog() {
     showDialog(
       barrierDismissible: false,
@@ -77,24 +37,6 @@ class _NewFilePageState extends State<NewFilePage> {
                   SizedBox(height: 14),
                   CircularProgressIndicator(),
                   SizedBox(height: 28),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      SizedBox(width: 35),
-                      Icon(
-                        Icons.check_circle,
-                        color: Colors.lightGreen,
-                        size: 24,
-                      ),
-                      SizedBox(width: 5),
-                      Text(
-                        "Uploaded",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(fontSize: 18),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 14),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
@@ -184,7 +126,7 @@ class _NewFilePageState extends State<NewFilePage> {
         });
   }
 
-  void summarizeFunction(int videoNumber) async {
+  void summarizeAndUploadFunction() async {
     showSummarizingDialog();
 
     var transcription = await convertSpeechToText(file.path);
@@ -192,6 +134,16 @@ class _NewFilePageState extends State<NewFilePage> {
 
     String prompt =
         "You are a helpful assistant. You need to summarize the text given by the user. Please answer all my question in English or Traditional Chinese. Please, do not use Simplified Chinese in the conversation later on no matter what.";
+
+    // get video numbers
+    int videoNumber = 0;
+    await FirebaseFirestore.instance
+        .collection('userFile')
+        .doc(userId)
+        .collection('userVideos')
+        .count()
+        .get()
+        .then((res) => videoNumber = res.count!);
 
     // upload the `summary` here
     Map<String, dynamic> userVideoData = {
@@ -208,17 +160,41 @@ class _NewFilePageState extends State<NewFilePage> {
         .doc(userId)
         .collection('userVideos')
         .doc('video #$videoNumber')
-        .update(userVideoData)
+        .set(userVideoData)
         .then((value) async {
-      // pop out the summarizing dialog
-      Navigator.pop(context);
-      showSuccessSummarizeDialog();
+      // pop out the uploading dialog
+      
     }).catchError((e) {
       // pop out the circle dialog
       Navigator.pop(context);
       showErrorDialog(e.code);
       print("---------- Failed to update reference :( ----------");
     });
+
+    // uplaod to `firestore`
+    await FirebaseFirestore.instance
+        .collection('userFile')
+        .doc(userId)
+        .collection('userVideos')
+        .doc('video #$videoNumber')
+        .update(userVideoData)
+        .then((value) async {
+          // pop out the summarizing dialog
+          Navigator.pop(context);
+          showSuccessSummarizeDialog();
+        })
+        .catchError((e) {
+      // pop out the circle dialog
+      Navigator.pop(context);
+      showErrorDialog(e.code);
+      print("---------- Failed to update reference :( ----------");
+    });
+
+    // upload to `storage`
+    final storageRef = FirebaseStorage.instance.ref();
+    final videosRef =
+        storageRef.child("$userId/videoFiles/video_#$videoNumber");
+    await videosRef.putFile(file);
   }
 
   void showErrorDialog(String msg) {
@@ -256,50 +232,11 @@ class _NewFilePageState extends State<NewFilePage> {
     );
 
     if (result != null) {
-      // the dialog of uploading videos
-      showUploadingDialog();
-
       // uploading file to `storage`
       file = File(result.files.single.path!);
-      final storageRef = FirebaseStorage.instance.ref();
 
-      int videoNumber = 0;
-
-      // get video numbers
-      await FirebaseFirestore.instance
-          .collection('userFile')
-          .doc(userId)
-          .collection('userVideos')
-          .count()
-          .get()
-          .then((res) => videoNumber = res.count!);
-
-      final videosRef =
-          storageRef.child("$userId/videoFiles/video_#$videoNumber");
-      await videosRef.putFile(file);
-
-      // the field information of the video
-      Map<String, dynamic> userVideoData = {
-        'path': videosRef.fullPath,
-      };
-
-      // uploading file to `firestore`
-      await FirebaseFirestore.instance
-          .collection('userFile')
-          .doc(userId)
-          .collection('userVideos')
-          .doc('video #$videoNumber')
-          .set(userVideoData)
-          .then((value) async {
-        // pop out the uploading dialog
-        Navigator.pop(context);
-        summarizeFunction(videoNumber);
-      }).catchError((e) {
-        // pop out the circle dialog
-        Navigator.pop(context);
-        showErrorDialog(e.code);
-        print("---------- Failed to update reference :( ----------");
-      });
+      // summarize & upload to firebase
+      summarizeAndUploadFunction();
     } else {
       print("---------- No file selected ----------");
     }
