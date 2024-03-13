@@ -152,8 +152,7 @@ class _NewFilePageState extends State<NewFilePage> {
                               fontWeight: FontWeight.normal,
                               color: Colors.black87,
                               fontSize: 15,
-                            )
-                          ),
+                            )),
                       ],
                     ),
                   ),
@@ -191,7 +190,8 @@ class _NewFilePageState extends State<NewFilePage> {
     var transcription = await convertSpeechToText(file.path);
     var summary = await summarizeText(transcription);
 
-    String prompt = "You are a helpful assistant. You need to summarize the text given by the user. Please answer all my question in English or Traditional Chinese. Please, do not use Simplified Chinese in the conversation later on no matter what.";
+    String prompt =
+        "You are a helpful assistant. You need to summarize the text given by the user. Please answer all my question in English or Traditional Chinese. Please, do not use Simplified Chinese in the conversation later on no matter what.";
 
     // upload the `summary` here
     Map<String, dynamic> userVideoData = {
@@ -199,7 +199,8 @@ class _NewFilePageState extends State<NewFilePage> {
       'summary': summary,
       'timestamp': Timestamp.now(),
       'name': 'video_$videoNumber',
-      'conversation' : '{"messages" : [{"role": "system", "content" : "$prompt"}, {"role" : "user", "content" : "The following is the class content: $transcription"}, {"role" : "system", "content" : "$summary"}]}'
+      'conversation':
+          '{"messages" : [{"role": "system", "content" : "$prompt"}, {"role" : "user", "content" : "The following is the class content: $transcription"}, {"role" : "system", "content" : "$summary"}]}'
     };
 
     await FirebaseFirestore.instance
@@ -304,34 +305,32 @@ class _NewFilePageState extends State<NewFilePage> {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.primary,
-        toolbarHeight: 80,
-        leading: const Icon(Icons.add, color: Colors.white, size: 35),
-        title: Text(
-          '新增檔案',
-          style: Theme.of(context).textTheme.displayLarge,
-        ),
-      ),
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              OpTile(
-                opName: '新專案',
-                color: Theme.of(context).colorScheme.secondary,
-                onTap: newVideoProject,
-              ),
-            ],
+        appBar: AppBar(
+          backgroundColor: Theme.of(context).colorScheme.primary,
+          toolbarHeight: 80,
+          leading: const Icon(Icons.add, color: Colors.white, size: 35),
+          title: Text(
+            '新增檔案',
+            style: Theme.of(context).textTheme.displayLarge,
           ),
         ),
-      )
-    );
+        body: Center(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                OpTile(
+                  opName: '新專案',
+                  color: Theme.of(context).colorScheme.secondary,
+                  onTap: newVideoProject,
+                ),
+              ],
+            ),
+          ),
+        ));
   }
 }
