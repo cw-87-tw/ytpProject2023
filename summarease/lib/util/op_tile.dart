@@ -5,7 +5,7 @@ class OpTile extends StatelessWidget {
   final Color? color;
   final void Function()? onTap;
 
-  OpTile({
+  const OpTile({
     super.key,
     required this.opName,
     required this.color,

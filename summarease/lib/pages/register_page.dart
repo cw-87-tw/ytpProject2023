@@ -3,7 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:summarease/util/login_textfield.dart';
 import 'package:summarease/util/op_tile.dart';
-import 'package:summarease/read_data/get_current_user_id.dart';
 
 class RegisterPage extends StatefulWidget {
   final Function()? onTap;
