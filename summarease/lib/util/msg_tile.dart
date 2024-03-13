@@ -7,22 +7,45 @@ class MsgTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Icon(Icons.account_circle),
-              Text(role),
-            ],
-          ),
-          Text(
-            content,
-            softWrap: true,
-            textAlign: TextAlign.left,
-          )
-        ],
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.grey[100],
+          borderRadius: BorderRadius.circular(12.0)
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                const Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Icon(Icons.account_circle),
+                ),
+                Text(
+                  role,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                  ),
+                ),
+              ],
+            ),
+            Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(left: 40.0, right: 8.0, bottom: 10.0),
+                  child: Text(
+                    content,
+                    softWrap: true,
+                    textAlign: TextAlign.left,
+                  ),
+                ),
+              ],
+            )
+          ],
+        ),
       ),
     );
   }

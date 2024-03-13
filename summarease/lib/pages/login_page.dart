@@ -25,25 +25,13 @@ class _LoginPageState extends State<LoginPage> {
   final password_controller = TextEditingController();
 
   void signUserIn() async {
-    //loading circle
-    showDialog(
-      barrierDismissible: false,
-      context: context,
-      builder: (context) {
-        return const Center(
-          child: CircularProgressIndicator(),
-        );
-      }
-    );
     //sign in
     try {
       await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: email_controller.text.trim(),
         password: password_controller.text,
       );
-      Navigator.pop(context);
     } on FirebaseAuthException catch (e) {
-      Navigator.pop(context);
       showError(e.code);
     }
   }
@@ -58,19 +46,25 @@ class _LoginPageState extends State<LoginPage> {
               borderRadius: BorderRadius.circular(10.0),
               // side: BorderSide(width: 2, color: Colors.red.shade300)
             ),
-            title: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Center(
-                  child: Row(
-                    children: [
-                      Icon(Icons.warning_amber, color: Colors.red.shade300,),
-                      Text(
-                        ' Error: ' + msg,
-                        style: TextStyle(color: Colors.red.shade300, fontSize: 20)
+            title: Center(
+                child: Row(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Icon(Icons.warning_amber, color: Colors.red.shade300,),
+                    ),
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                        child: Text(
+                          "Error: $msg",
+                          style: TextStyle(color: Colors.red.shade300, fontSize: 20),
+                          softWrap: true,
+                        ),
                       ),
-                    ],
-                  )
-              ),
+                    ),
+                  ],
+                )
             ),
           );
         }

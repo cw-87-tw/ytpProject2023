@@ -10,6 +10,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:summarease/read_data/get_current_user_id.dart';
+import '../process/sendEmail.dart';
 
 class NewFilePage extends StatefulWidget {
   const NewFilePage({super.key});
@@ -122,18 +123,18 @@ class _NewFilePageState extends State<NewFilePage> {
 
   void showSuccessSummarizeDialog() {
     showDialog(
-      barrierDismissible: false,
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          backgroundColor: Color.fromARGB(255, 197, 253, 200),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10.0),
-          ),
-          title: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Center(
-              child: Row(
+        barrierDismissible: false,
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            backgroundColor: Color.fromARGB(255, 197, 253, 200),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10.0),
+            ),
+            title: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Center(
+                  child: Row(
                 children: [
                   SizedBox(
                     child: Row(
@@ -146,45 +147,41 @@ class _NewFilePageState extends State<NewFilePage> {
                         ),
                         SizedBox(width: 16),
                         Text('Summarize Successful',
-                          textAlign: TextAlign.left,
-                          style: TextStyle(
-                            fontWeight: FontWeight.normal,
-                            color: Colors.black87,
-                            fontSize: 20
-                          )
-                        ),
+                            textAlign: TextAlign.left,
+                            style: TextStyle(
+                              fontWeight: FontWeight.normal,
+                              color: Colors.black87,
+                              fontSize: 15,
+                            )),
                       ],
                     ),
                   ),
                   SizedBox(height: 16),
                 ],
-              )
+              )),
             ),
-          ),
-          actions: <Widget>[
-            InkWell(
-              onTap: () {
-                Navigator.pop(context);
-              },
-              child: Container(
-                padding: EdgeInsets.all(8.0),
-                decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.secondary,
-                ),
-                child: Text(
-                  ' Done ',
-                  style: TextStyle(
-                    fontWeight: FontWeight.normal,
-                    color: Colors.black87,
-                    fontSize: 16,
-                  ),
-                ),
-              )
-            )
-          ],
-        );
-      }
-    );
+            actions: <Widget>[
+              InkWell(
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                  child: Container(
+                    padding: EdgeInsets.all(8.0),
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.secondary,
+                    ),
+                    child: Text(
+                      ' Done ',
+                      style: TextStyle(
+                        fontWeight: FontWeight.normal,
+                        color: Colors.black87,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ))
+            ],
+          );
+        });
   }
 
   void summarizeFunction(int videoNumber) async {
@@ -193,10 +190,17 @@ class _NewFilePageState extends State<NewFilePage> {
     var transcription = await convertSpeechToText(file.path);
     var summary = await summarizeText(transcription);
 
+    String prompt =
+        "You are a helpful assistant. You need to summarize the text given by the user. Please answer all my question in English or Traditional Chinese. Please, do not use Simplified Chinese in the conversation later on no matter what.";
+
     // upload the `summary` here
     Map<String, dynamic> userVideoData = {
-      'transcription': transcription,
+      'script': transcription,
       'summary': summary,
+      'timestamp': Timestamp.now(),
+      'name': 'video_$videoNumber',
+      'conversation':
+          '{"messages" : [{"role": "system", "content" : "$prompt"}, {"role" : "user", "content" : "The following is the class content: $transcription"}, {"role" : "system", "content" : "$summary"}]}'
     };
 
     await FirebaseFirestore.instance
@@ -204,7 +208,7 @@ class _NewFilePageState extends State<NewFilePage> {
         .doc(userId)
         .collection('userVideos')
         .doc('video #$videoNumber')
-        .set(userVideoData)
+        .update(userVideoData)
         .then((value) async {
       // pop out the summarizing dialog
       Navigator.pop(context);
@@ -219,39 +223,36 @@ class _NewFilePageState extends State<NewFilePage> {
 
   void showErrorDialog(String msg) {
     showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          backgroundColor: Colors.red.shade100,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10.0),
-          ),
-          title: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Center(
-              child: Row(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            backgroundColor: Colors.red.shade100,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10.0),
+            ),
+            title: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Center(
+                  child: Row(
                 children: [
                   Icon(
                     Icons.warning_amber,
                     color: Colors.red.shade300,
                   ),
-                  Text(
-                    ' Error: $msg',
-                    style: TextStyle(color: Colors.red.shade300, fontSize: 20)
-                  ),
+                  Text(' Error: $msg',
+                      style:
+                          TextStyle(color: Colors.red.shade300, fontSize: 20)),
                 ],
-              )
+              )),
             ),
-          ),
-        );
-      }
-    );
+          );
+        });
   }
 
   Future<void> newVideoProject() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(
       type: FileType.custom,
-      allowedExtensions: ['mp4', 'avi', 'mkv', 'flv', 'mov'],
+      allowedExtensions: ['mp4', 'avi', 'mkv', 'flv', 'mov', 'm4a', 'wav'],
     );
 
     if (result != null) {
@@ -262,12 +263,17 @@ class _NewFilePageState extends State<NewFilePage> {
       file = File(result.files.single.path!);
       final storageRef = FirebaseStorage.instance.ref();
 
+      int videoNumber = 0;
 
-      //威廉改這裡!!!!!!!!!!!!!!!!!!!
-      // getVideoIDs();
-      List videoIDs = [];
-      //威廉改這裡!!!!!!!!!!!!!!!!!!!
-      int videoNumber = videoIDs.length;
+      // get video numbers
+      await FirebaseFirestore.instance
+          .collection('userFile')
+          .doc(userId)
+          .collection('userVideos')
+          .count()
+          .get()
+          .then((res) => videoNumber = res.count!);
+
       final videosRef =
           storageRef.child("$userId/videoFiles/video_#$videoNumber");
       await videosRef.putFile(file);
@@ -282,7 +288,7 @@ class _NewFilePageState extends State<NewFilePage> {
           .collection('userFile')
           .doc(userId)
           .collection('userVideos')
-          .doc('video #${videoIDs.length}')
+          .doc('video #$videoNumber')
           .set(userVideoData)
           .then((value) async {
         // pop out the uploading dialog
@@ -299,10 +305,6 @@ class _NewFilePageState extends State<NewFilePage> {
     }
   }
 
-  void setEmailRecipient() {
-    showUploadingDialog();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -317,7 +319,7 @@ class _NewFilePageState extends State<NewFilePage> {
         ),
         body: Center(
           child: Padding(
-            padding: EdgeInsets.all(50),
+            padding: const EdgeInsets.symmetric(horizontal: 20.0),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -326,12 +328,6 @@ class _NewFilePageState extends State<NewFilePage> {
                   color: Theme.of(context).colorScheme.secondary,
                   onTap: newVideoProject,
                 ),
-                SizedBox(height: 20),
-                OpTile(
-                  opName: '預設寄信對象',
-                  color: Theme.of(context).colorScheme.secondary,
-                  onTap: setEmailRecipient,
-                )
               ],
             ),
           ),

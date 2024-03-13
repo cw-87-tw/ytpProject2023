@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
-import 'package:summarease/pages/history_page_2.dart';
+import 'package:summarease/pages/history_page.dart';
 import 'account_page.dart';
 import 'new_file_page.dart';
-import 'test_page.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -16,7 +15,7 @@ class _HomeState extends State<Home> {
 
   int curInd = 1;
   final List<Widget> pages = [
-    HistoryPage2(),
+    HistoryPage(),
     const NewFilePage(),
     AccountPage(),
   ];

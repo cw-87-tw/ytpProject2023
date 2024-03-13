@@ -3,7 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:summarease/util/login_textfield.dart';
 import 'package:summarease/util/op_tile.dart';
-import 'package:summarease/read_data/get_current_user_id.dart';
 
 class RegisterPage extends StatefulWidget {
   final Function()? onTap;
@@ -23,16 +22,6 @@ class _RegisterPageState extends State<RegisterPage> {
   final confirmPassword_controller = TextEditingController();
 
   void signUserUp() async {
-    //loading circle
-    showDialog(
-      barrierDismissible: false,
-      context: context,
-      builder: (context) {
-        return const Center(
-          child: CircularProgressIndicator(),
-        );
-      }
-    );
     //sign in
     try {
       if (password_controller.text == confirmPassword_controller.text) {
@@ -41,14 +30,14 @@ class _RegisterPageState extends State<RegisterPage> {
           password: password_controller.text.trim(),
         );
 
-        String userId = getCurrentUserId();
+        User? user = FirebaseAuth.instance.currentUser;
         Map<String, dynamic> userRegisterData = {
           'email': email_controller.text.trim(),
           'password': password_controller.text.trim(),
         };
         await FirebaseFirestore.instance
             .collection('users')
-            .doc(userId)
+            .doc(user!.uid)
             .set(userRegisterData)
             .then((value) {
               print("---------- added users document ----------");
@@ -56,14 +45,10 @@ class _RegisterPageState extends State<RegisterPage> {
             .catchError((error) {
               print("---------- failed adding users document ----------");
             });
-
-        Navigator.pop(context);
       } else {
-        Navigator.pop(context);
         showError('passwords don\'t match');
       }
     } on FirebaseAuthException catch (e) {
-      Navigator.pop(context);
       showError(e.code);
     }
   }
@@ -78,24 +63,29 @@ class _RegisterPageState extends State<RegisterPage> {
               borderRadius: BorderRadius.circular(10.0),
               // side: BorderSide(width: 2, color: Colors.red.shade300)
             ),
-            title: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Center(
-                  child: Row(
+            title: Center(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Icon(
-                    Icons.warning_amber,
-                    color: Colors.red.shade300,
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Icon(
+                      Icons.warning_amber,
+                      color: Colors.red.shade300,
+                    ),
                   ),
                   Expanded(
-                    child: FittedBox(
-                      child: Text(' Error: ' + msg,
-                          style: TextStyle(
-                              color: Colors.red.shade300, fontSize: 20)),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                      child: Text(
+                        "Error: $msg",
+                        style: TextStyle(color: Colors.red.shade300, fontSize: 20),
+                        softWrap: true,
+                      ),
                     ),
                   ),
                 ],
-              )),
+              )
             ),
           );
         });

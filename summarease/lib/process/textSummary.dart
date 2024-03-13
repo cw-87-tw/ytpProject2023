@@ -2,8 +2,11 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'assets.dart';
 
+String defaultPrompt =
+    'You are a helpful assistant. You need to summarize the text given by the user. Please answer all my question in English or Traditional Chinese. Please, do not use Simplified Chinese in the conversation later on no matter what.';
+
 // return the latest response
-Future<String> callAPI(List<Map<String, String>> msgs) async { 
+Future<String> callAPI(List msgs) async {
   final apiUrl = 'https://api.openai.com/v1/chat/completions';
 
   final response = await http.post(
@@ -35,27 +38,16 @@ Future<String> callAPI(List<Map<String, String>> msgs) async {
 }
 
 Future<String> summarizeText(String text) async {
-  List<Map<String, String>> msgs = [
+  List msgs = [
     {
       "role": "system",
-      "content":
-          "You are a helpful assistant. You need to summarize the text given by the user. But you can only answer all questions in English."
+      "content": defaultPrompt
     },
     {"role": "user", "content": text},
   ];
-  return callAPI(msgs);
-  
+  return await callAPI(msgs);
 }
 
-Future<String> sendAPIMessage(List<Map<String, String>> chatMsgs, String summary) {
-  List<Map<String, String>> msgs = [
-    {
-      "role": "system",
-      "content":
-          "You are a helpful assistant. You need to summarize the text given by the user. But you can only answer all questions in English."
-    },
-    {"role": "user", "content": summary},
-  ];
-  msgs.addAll(chatMsgs);
-  return callAPI(msgs);
+Future<String> sendAPIMessage(List chatMsgs) async {
+  return await callAPI(chatMsgs);
 }
