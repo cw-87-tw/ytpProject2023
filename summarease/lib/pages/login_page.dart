@@ -25,25 +25,13 @@ class _LoginPageState extends State<LoginPage> {
   final password_controller = TextEditingController();
 
   void signUserIn() async {
-    //loading circle
-    showDialog(
-      barrierDismissible: false,
-      context: context,
-      builder: (context) {
-        return const Center(
-          child: CircularProgressIndicator(),
-        );
-      }
-    );
     //sign in
     try {
       await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: email_controller.text.trim(),
         password: password_controller.text,
       );
-      Navigator.pop(context);
     } on FirebaseAuthException catch (e) {
-      Navigator.pop(context);
       showError(e.code);
     }
   }

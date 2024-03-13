@@ -23,16 +23,6 @@ class _RegisterPageState extends State<RegisterPage> {
   final confirmPassword_controller = TextEditingController();
 
   void signUserUp() async {
-    //loading circle
-    showDialog(
-      barrierDismissible: false,
-      context: context,
-      builder: (context) {
-        return const Center(
-          child: CircularProgressIndicator(),
-        );
-      }
-    );
     //sign in
     try {
       if (password_controller.text == confirmPassword_controller.text) {
@@ -46,7 +36,6 @@ class _RegisterPageState extends State<RegisterPage> {
           'email': email_controller.text.trim(),
           'password': password_controller.text.trim(),
         };
-        Navigator.pop(context);
         await FirebaseFirestore.instance
             .collection('users')
             .doc(user!.uid)
@@ -58,11 +47,9 @@ class _RegisterPageState extends State<RegisterPage> {
               print("---------- failed adding users document ----------");
             });
       } else {
-        Navigator.pop(context);
         showError('passwords don\'t match');
       }
     } on FirebaseAuthException catch (e) {
-      Navigator.pop(context);
       showError(e.code);
     }
   }
