@@ -177,13 +177,14 @@ class _SummaryPageState extends State<SummaryPage> {
                     //if empty
                     if (msg_controller.text.isEmpty) return;
 
+                    
                     //add user msg to list
                     msgs.add({"role": "user", "content": msg_controller.text});
-                    msgs.add({"role" : "system", "content": "ChatGPT is replying..."});
                     msg_controller.clear();
 
                     //update user msg
                     await conversation.updateConversation(msgs, widget.videoIndex);
+                    print(msgs.length);
 
                     //auto scroll
                     scrollToBottom();
@@ -192,7 +193,6 @@ class _SummaryPageState extends State<SummaryPage> {
                     FocusScope.of(context).requestFocus(FocusNode());
 
                     //call chatgpt
-                    msgs.removeLast();
                     String aiMsg = await sendAPIMessage(msgs);
                     msgs.add({"role": "system", "content": aiMsg});
 
