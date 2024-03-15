@@ -28,6 +28,8 @@ class _SummaryPageState extends State<SummaryPage> {
 
   final ScrollController scroll_controller = ScrollController();
 
+  String replyingText = "";
+
   @override
   void initState() {
     super.initState();
@@ -47,16 +49,19 @@ class _SummaryPageState extends State<SummaryPage> {
   }
 
   void callSendEmail() async {
-    DocumentReference vid = 
-      FirebaseFirestore.instance.collection('userFile')
-      .doc(user!.uid).collection('userVideos').doc('video #${widget.videoIndex}');
+    DocumentReference vid = FirebaseFirestore.instance
+        .collection('userFile')
+        .doc(user!.uid)
+        .collection('userVideos')
+        .doc('video #${widget.videoIndex}');
     vid.get().then((doc) async {
       List _msgs = jsonDecode(doc['conversation'])['messages'];
       String result = "";
-      for (int i = 0; i < _msgs.length; i++) {
+      for (int i = 1; i < _msgs.length; i++) {
         result += "${_msgs[i]['role']} : \n${_msgs[i]['content']}\n\n";
       }
-      await sendEmail([user!.email!], "Summarease ${doc['name']} conversation", result);
+      await sendEmail(
+          [user!.email!], "Summarease ${doc['name']} conversation", result);
     });
   }
 
@@ -69,15 +74,16 @@ class _SummaryPageState extends State<SummaryPage> {
           Padding(
             padding: const EdgeInsets.all(15.0),
             child: GestureDetector(
-                onTap: callSendEmail, 
+                onTap: callSendEmail,
                 child: const Row(
                   children: [
                     Text("Send Email"),
-                    SizedBox(width: 8.0,),
+                    SizedBox(
+                      width: 8.0,
+                    ),
                     Icon(Icons.mail),
                   ],
-                )
-            ),
+                )),
           ),
         ],
       ),
@@ -120,11 +126,16 @@ class _SummaryPageState extends State<SummaryPage> {
                       shrinkWrap: true,
                       itemCount: msgs.length,
                       itemBuilder: (context, index) {
-                        if (index < 2) {return const SizedBox(height: 0.1,);}
-                        else {return MsgTile(
-                          role: msgs[index]["role"].toString(),
-                          content: msgs[index]["content"].toString(),
-                        );}
+                        if (index < 2) {
+                          return const SizedBox(
+                            height: 0.1,
+                          );
+                        } else {
+                          return MsgTile(
+                            role: msgs[index]["role"].toString(),
+                            content: msgs[index]["content"].toString(),
+                          );
+                        }
                       },
                     ),
                   );
@@ -139,17 +150,16 @@ class _SummaryPageState extends State<SummaryPage> {
               height: 40.0,
               width: 40.0,
               child: FloatingActionButton(
-                backgroundColor: Theme.of(context).colorScheme.surface,
-                elevation: 0,
-                child: const Icon(
-                  size: 20.0,
-                  Icons.arrow_downward,
-                  color: Colors.black,
-                ),
-                onPressed: () {
-                  scrollToBottom();
-                }
-              ),
+                  backgroundColor: Theme.of(context).colorScheme.surface,
+                  elevation: 0,
+                  child: const Icon(
+                    size: 20.0,
+                    Icons.arrow_downward,
+                    color: Colors.black,
+                  ),
+                  onPressed: () {
+                    scrollToBottom();
+                  }),
             ),
 
             //textfield & send button
@@ -157,7 +167,6 @@ class _SummaryPageState extends State<SummaryPage> {
               padding: const EdgeInsets.only(top: 10.0, bottom: 25.0),
               child: Row(
                 children: [
-
                   Expanded(
                     child: Padding(
                       padding: const EdgeInsets.only(left: 16.0),
@@ -172,23 +181,22 @@ class _SummaryPageState extends State<SummaryPage> {
                       ),
                     ),
                   ),
-
                   SendButton(onTap: () async {
                     //if empty
                     if (msg_controller.text.isEmpty) return;
 
-                    
                     //add user msg to list
                     msgs.add({"role": "user", "content": msg_controller.text});
+
                     msg_controller.clear();
 
                     //update user msg
-                    await conversation.updateConversation(msgs, widget.videoIndex);
-                    print(msgs.length);
+                    await conversation.updateConversation(
+                        msgs, widget.videoIndex);
 
                     //auto scroll
                     scrollToBottom();
-                    
+
                     //hide phone keyboard
                     FocusScope.of(context).requestFocus(FocusNode());
 
@@ -197,11 +205,11 @@ class _SummaryPageState extends State<SummaryPage> {
                     msgs.add({"role": "system", "content": aiMsg});
 
                     //update chatgpt message
-                    await conversation.updateConversation(msgs, widget.videoIndex);
+                    await conversation.updateConversation(
+                        msgs, widget.videoIndex);
 
                     //auto scroll
                     scrollToBottom();
-                    
                   }),
                 ],
               ),

@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'assets.dart';
 
 String defaultPrompt =
-    'You are a helpful assistant. You need to summarize the text given by the user. Please answer all my question in English or Traditional Chinese. Please, do not use Simplified Chinese in the conversation later on no matter what.';
+    '請你接下來幫忙使用者整理來源的逐字稿內容，並且在接下來的所有問題中使用繁體中文回答，無論如何請勿使用簡體中文';
 
 // return the latest response
 Future<String> callAPI(List msgs) async {

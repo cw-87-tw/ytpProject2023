@@ -152,7 +152,7 @@ class _NewFilePageState extends State<NewFilePage> {
       'timestamp': Timestamp.now(),
       'name': 'video_$videoNumber',
       'conversation':
-          '{"messages" : [{"role": "system", "content" : "$prompt"}, {"role" : "user", "content" : "The following is the class content: $transcription"}, {"role" : "system", "content" : "$summary"}]}'
+          '{"messages" : [{"role": "system", "content" : "$prompt"}, {"role" : "user", "content" : "接下來的是課程的內容: $transcription"}, {"role" : "system", "content" : "$summary"}]}'
     };
 
     // upload to `storage`
