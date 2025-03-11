@@ -47,3 +47,7 @@ app.*.map.json
 
 # Ignore Gradle build output directory
 build
+
+
+# API Key
+lib\process\assets.dart
